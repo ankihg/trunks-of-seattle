@@ -2,7 +2,7 @@
 
 module.exports = (router, models) => {
   let User = models.User;
-  let jwtAuth = require(__dirname + '/../lib/authenticate.js');
+  let jwtAuth = require(__dirname + '/../lib/jwt_auth.js');
 
   router.route('/users')
     .get((req, res) => {

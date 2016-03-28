@@ -2,7 +2,7 @@
 
 module.exports = (router, models) => {
   let Species = models.Species;
-  let jwtAuth = require(__dirname + '/../lib/authenticate.js');
+  let jwtAuth = require(__dirname + '/../lib/jwt_auth.js');
 
   router.route('/species')
     .get((req, res) => {

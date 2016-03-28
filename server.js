@@ -9,7 +9,7 @@ let bodyParser = require('body-parser');
 let morgan = require('morgan');
 let config = require(__dirname + '/config/env.js');
 
-require(__dirname + '/routes/login-routes')(publicRouter, models);
+require(__dirname + '/routes/auth-routes')(publicRouter, models);
 require(__dirname + '/routes/neighborhoods-routes')(apiRouter, models);
 require(__dirname + '/routes/species-routes')(apiRouter, models);
 require(__dirname + '/routes/trees-routes')(apiRouter, models);
