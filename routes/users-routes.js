@@ -9,5 +9,14 @@ module.exports = (router, models) => {
     })
     .post((req, res) => {
 
+    })
+    .get('/:id',(req, res) => {
+
+    })
+    .put('/:id',(req, res) => {
+
+    })
+    .delete('/:id',(req, res) => {
+
     });
 };
