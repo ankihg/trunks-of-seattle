@@ -14,6 +14,14 @@ module.exports = (router, models) => {
       });
     })
     .post(jwtAuth, (req, res) => {
+      User.findOne({username: req.body.username}, (err, user) => {
+        if (err) {
+          return res.send(err);
+        }
+        if (user) {
+          return res.json({message: 'User Already Exists', data: user});
+        }
+      });
       var newUser = new User(req.body);
       newUser.save((err, user) => {
         if (err) {

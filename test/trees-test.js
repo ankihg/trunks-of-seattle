@@ -12,18 +12,19 @@ let expect = chai.expect;
 
 const models = require(__dirname + '/../models');
 const Tree = models.Tree;
+const Species = models.Species;
 
-describe('trees db testing', () => {
-
-  it('get tree with cityID TRE-1051550', (done) => {
-    Tree.findOne({cityID:'TRE-1051550'})
-    .populate('species')
-    .exec((err, tree) => {
-      expect(err).eql(null);
-      expect(tree.cityID).eql('TRE-1051550');
-      done();
-    });
-  });
+// describe('trees db testing', () => {
+//
+//   it('get tree with cityID TRE-1051550', (done) => {
+//     Tree.findOne({cityID:'TRE-1051550'})
+//     .populate('species')
+//     .exec((err, tree) => {
+//       expect(err).eql(null);
+//       expect(tree.cityID).eql('TRE-1051550');
+//       done();
+//     });
+//   });
 
   // it('get all trees', (done) => {
   //   Tree.find({}, (err, trees) => {
@@ -33,4 +34,42 @@ describe('trees db testing', () => {
   //   })
   // });
 
+// });
+
+describe('Integration testing for /trees routes', ()=>{
+  let speciesTest;
+  let speciesTestId;
+  before((done)=>{
+    speciesTest = new Species({genus: 'prunus', species: 'Plam', commonName: 'Palm tree'});
+
+    speciesTest.save((err, species)=>{
+      if(err){
+        console.log('err :' + err);
+        return;
+      }
+      console.log('New Species input  :' + species);
+      speciesTestId = species._id;
+      let tree = new Tree({species: species._id, cityID: 'hsj22'});
+      tree.save((err, tree)=>{
+        if(err){
+          console.log('err :' + err);
+          return;
+        }
+        console.log('New Tree input  :' + tree);
+        done();
+      });
+    });
+
+  });
+  it('should return all trees data',(done)=>{
+    request('localhost:3000')
+    .get('/api/trees')
+    .end((err, res)=>{
+      debugger;
+      expect(err).to.be.null;
+      expect(res.body).to.be.an('array');
+      expect(res.body[0]).to.have.property('species');
+      done();
+    });
+  });
 });
