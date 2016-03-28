@@ -9,12 +9,38 @@ module.exports = (router, models) => {
     })
     .post((req, res) => {
 
-    })
-    .get('/genus',(req, res) => {
+    });
+
+    router.route('/trees/:tree')
+    .get((req, res)=>{
 
     })
-    .get('/species',(req, res) => {
+    .put((req, res)=>{
+
+    })
+    .delete((req, res)=>{
 
     });
 
+    router.route('/trees/species/:species')
+    .get((req, res)=>{
+
+    })
+    .put((req, res)=>{
+
+    })
+    .delete((req, res)=>{
+
+    });
+
+    router.route('/trees/species/:species/neighborhoods/:neighborhood')
+    .get((req, res)=>{
+
+    })
+    .put((req, res)=>{
+
+    })
+    .delete((req, res)=>{
+
+    });
 };
