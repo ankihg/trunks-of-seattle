@@ -8,31 +8,32 @@ chai.use(chaiHttp);
 let request = chai.request;
 let expect = chai.expect;
 
-let userId;
+let speciesId;
 
-let userJSON = {
-  username: 'jamielim',
-  password: 'helloworld'
+let speciesJSON = {
+  genus: 'big dogs',
+  species: 'great dane',
+  commonName: 'dog'
 };
 
-describe('test /users routes', () => {
-  describe('GET /users/*', () => {
+describe('test /species routes', () => {
+  describe('GET /species/*', () => {
     before((done) => {
       request('localhost:3000')
-        .post('/api/users')
-        .send(userJSON)
+        .post('/api/species')
+        .send(speciesJSON)
         .end((err, res) => {
           expect(err).to.equal(null);
           expect(res).to.have.status(200);
           expect(res).to.be.json;
-          userId = res.body._id;
+          speciesId = res.body._id;
           done();
         });
     });
 
     after((done) => {
       request('localhost:3000')
-        .delete('/api/users/' + userId)
+        .delete('/api/species/' + speciesId)
         .end((err, res) => {
           expect(err).to.equal(null);
           expect(res).to.have.status(200);
@@ -41,43 +42,47 @@ describe('test /users routes', () => {
         });
     });
 
-    it('should respond to GET /users', (done) => {
+    it('should respond to GET /species', (done) => {
       request('localhost:3000')
-        .get('/api/users')
+        .get('/api/species')
         .end((err, res) => {
           expect(err).to.equal(null);
           expect(res).to.have.status(200);
           expect(res).to.be.json;
           let data = res.body.data;
           data = data[data.length - 1];
-          expect(data).to.have.property('username');
-          expect(data).to.have.property('password');
-          expect(data.username).to.equal('jamielim');
-          expect(data.password).to.not.equal(null);
+          expect(data).to.have.property('genus');
+          expect(data).to.have.property('species');
+          expect(data).to.have.property('commonName');
+          expect(data.genus).to.equal('big dogs');
+          expect(data.species).to.equal('great dane');
+          expect(data.commonName).to.equal('dog');
           done();
         });
     });
 
-    it('should respond to GET /users/:user', (done) => {
+    it('should respond to GET /species/:user', (done) => {
       request('localhost:3000')
-        .get('/api/users/' + userId)
+        .get('/api/species/' + speciesId)
         .end((err, res) => {
           expect(err).to.equal(null);
           expect(res).to.have.status(200);
           expect(res).to.be.json;
-          expect(res.body).to.have.property('username');
-          expect(res.body).to.have.property('password');
-          expect(res.body.username).to.equal('jamielim');
-          expect(res.body.password).to.not.equal(null);
+          expect(res.body).to.have.property('genus');
+          expect(res.body).to.have.property('species');
+          expect(res.body).to.have.property('commonName');
+          expect(res.body.genus).to.equal('big dogs');
+          expect(res.body.species).to.equal('great dane');
+          expect(res.body.commonName).to.equal('dog');
           done();
         });
     });
   });
 
-  describe('POST /users', () => {
+  describe('POST /species', () => {
     after((done) => {
       request('localhost:3000')
-        .delete('/api/users/' + userId)
+        .delete('/api/species/' + speciesId)
         .end((err, res) => {
           expect(err).to.equal(null);
           expect(res).to.have.status(200);
@@ -86,43 +91,44 @@ describe('test /users routes', () => {
         });
     });
 
-    it('should respond to POST /users', (done) => {
+    it('should respond to POST /species', (done) => {
       request('localhost:3000')
-        .post('/api/users')
-        .send(userJSON)
+        .post('/api/species')
+        .send(speciesJSON)
         .end((err, res) => {
-          userId = res.body._id;
+          speciesId = res.body._id;
           expect(err).to.equal(null);
           expect(res).to.have.status(200);
           expect(res).to.be.json;
-          expect(res.body).to.have.property('username');
-          expect(res.body.username).to.be.equal('jamielim');
-          expect(res.body).to.have.property('password');
-          expect(res.body.password).to.not.equal(null);
-          expect(res.body).to.have.property('_id');
+          expect(res.body).to.have.property('genus');
+          expect(res.body).to.have.property('species');
+          expect(res.body).to.have.property('commonName');
+          expect(res.body.genus).to.equal('big dogs');
+          expect(res.body.species).to.equal('great dane');
+          expect(res.body.commonName).to.equal('dog');
           expect(res.body._id).to.not.equal(null);
           done();
         });
     });
   });
 
-  describe('PUT /users', () => {
+  describe('PUT /species', () => {
     before((done) => {
       request('localhost:3000')
-        .post('/api/users')
-        .send(userJSON)
+        .post('/api/species')
+        .send(speciesJSON)
         .end((err, res) => {
           expect(err).to.equal(null);
           expect(res).to.have.status(200);
           expect(res).to.be.json;
-          userId = res.body._id;
+          speciesId = res.body._id;
           done();
         });
     });
 
     after((done) => {
       request('localhost:3000')
-        .delete('/api/users/' + userId)
+        .delete('/api/species/' + speciesId)
         .end((err, res) => {
           expect(err).to.equal(null);
           expect(res).to.have.status(200);
@@ -131,45 +137,47 @@ describe('test /users routes', () => {
         });
     });
 
-    it('should respond to PUT /users/:user', (done) => {
+    it('should respond to PUT /species/:user', (done) => {
       request('localhost:3000')
-        .put('/api/users/' + userId)
-        .send({password: 'mynewpassword'})
+        .put('/api/species/' + speciesId)
+        .send({species: 'poodle'})
         .end((err, res) => {
           expect(err).to.equal(null);
           expect(res).to.have.status(200);
           expect(res).to.be.json;
-          expect(res.body).to.have.property('username');
-          expect(res.body).to.have.property('password');
-          expect(res.body.username).to.equal('jamielim');
-          expect(res.body.password).to.not.equal(null);
+          expect(res.body).to.have.property('genus');
+          expect(res.body).to.have.property('species');
+          expect(res.body).to.have.property('commonName');
+          expect(res.body.genus).to.equal('big dogs');
+          expect(res.body.species).to.equal('poodle');
+          expect(res.body.commonName).to.equal('dog');
           done();
         });
     });
   });
 
-  describe('DELETE /users', () => {
+  describe('DELETE /species', () => {
     before((done) => {
       request('localhost:3000')
-        .post('/api/users')
-        .send(userJSON)
+        .post('/api/species')
+        .send(speciesJSON)
         .end((err, res) => {
           expect(err).to.equal(null);
           expect(res).to.have.status(200);
           expect(res).to.be.json;
-          userId = res.body._id;
+          speciesId = res.body._id;
           done();
         });
     });
 
-    it('should respond to DELETE /users/:user', (done) => {
+    it('should respond to DELETE /species/:user', (done) => {
       request('localhost:3000')
-        .delete('/api/users/' + userId)
+        .delete('/api/species/' + speciesId)
         .end((err, res) => {
           expect(err).to.equal(null);
           expect(res).to.have.status(200);
           expect(res).to.be.json;
-          expect(res.body.message).to.be.equal('Deleted User');
+          expect(res.body.message).to.be.equal('Deleted Species');
           done();
         });
     });

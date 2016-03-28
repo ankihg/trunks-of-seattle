@@ -5,18 +5,43 @@ module.exports = (router, models) => {
 
   router.route('/users')
     .get((req, res) => {
-
+      User.find({}, (err, users) => {
+        if (err) {
+          return res.send(err);
+        }
+        res.status(200).json({data: users});
+      });
     })
     .post((req, res) => {
+      var newUser = new User(req.body);
+      newUser.save((err, user) => {
+        if (err) {
+          return res.send(err);
+        }
+        res.status(200).json(user);
+      });
+    });
 
+  router.route('/users/:user')
+    .get((req, res) => {
+      User.findById(req.params.user, (err, user) => {
+        if (err) {
+          return res.send(err);
+        }
+        res.status(200).json(user);
+      });
     })
-    .get('/:id',(req, res) => {
-
+    .put((req, res) => {
+      User.findByIdAndUpdate(req.params.user, req.body, {new: true}, (err, user) => {
+        if (err) {
+          return res.send(err);
+        }
+        res.status(200).json(user);
+      });
     })
-    .put('/:id',(req, res) => {
-
-    })
-    .delete('/:id',(req, res) => {
-
+    .delete((req, res) => {
+      User.findByIdAndRemove(req.params.user, (err, user) => {
+        res.status(200).json({message: 'Deleted User', data: user});
+      });
     });
 };
