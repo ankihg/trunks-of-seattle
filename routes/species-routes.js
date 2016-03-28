@@ -2,6 +2,7 @@
 
 module.exports = (router, models) => {
   let Species = models.Species;
+  let jwtAuth = require(__dirname + '/../lib/authenticate.js');
 
   router.route('/species')
     .get((req, res) => {
@@ -12,7 +13,7 @@ module.exports = (router, models) => {
         res.status(200).json({data: species});
       });
     })
-    .post((req, res) => {
+    .post(jwtAuth, (req, res) => {
       var newSpecies = new Species(req.body);
       newSpecies.save((err, species) => {
         if (err) {
@@ -31,7 +32,7 @@ module.exports = (router, models) => {
         res.status(200).json(species);
       });
     })
-    .put((req, res) => {
+    .put(jwtAuth, (req, res) => {
       Species.findByIdAndUpdate(req.params.species, req.body, {new: true}, (err, species) => {
         if (err) {
           return res.send(err);
@@ -39,7 +40,7 @@ module.exports = (router, models) => {
         res.status(200).json(species);
       });
     })
-    .delete((req, res) => {
+    .delete(jwtAuth, (req, res) => {
       Species.findByIdAndRemove(req.params.species, (err, species) => {
         if (err) {
           return res.send(err);

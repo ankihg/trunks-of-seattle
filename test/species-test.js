@@ -3,6 +3,7 @@
 let chai = require('chai');
 let chaiHttp = require('chai-http');
 require(__dirname + '/../server.js');
+let config = require(__dirname + '/../config/env.js');
 
 chai.use(chaiHttp);
 let request = chai.request;
@@ -19,7 +20,7 @@ let speciesJSON = {
 describe('test /species routes', () => {
   describe('GET /species/*', () => {
     before((done) => {
-      request('localhost:3000')
+      request('localhost:' + config.PORT)
         .post('/api/species')
         .send(speciesJSON)
         .end((err, res) => {
@@ -32,7 +33,7 @@ describe('test /species routes', () => {
     });
 
     after((done) => {
-      request('localhost:3000')
+      request('localhost:' + config.PORT)
         .delete('/api/species/' + speciesId)
         .end((err, res) => {
           expect(err).to.equal(null);
@@ -43,7 +44,7 @@ describe('test /species routes', () => {
     });
 
     it('should respond to GET /species', (done) => {
-      request('localhost:3000')
+      request('localhost:' + config.PORT)
         .get('/api/species')
         .end((err, res) => {
           expect(err).to.equal(null);
@@ -62,7 +63,7 @@ describe('test /species routes', () => {
     });
 
     it('should respond to GET /species/:user', (done) => {
-      request('localhost:3000')
+      request('localhost:' + config.PORT)
         .get('/api/species/' + speciesId)
         .end((err, res) => {
           expect(err).to.equal(null);
@@ -81,7 +82,7 @@ describe('test /species routes', () => {
 
   describe('POST /species', () => {
     after((done) => {
-      request('localhost:3000')
+      request('localhost:' + config.PORT)
         .delete('/api/species/' + speciesId)
         .end((err, res) => {
           expect(err).to.equal(null);
@@ -92,7 +93,7 @@ describe('test /species routes', () => {
     });
 
     it('should respond to POST /species', (done) => {
-      request('localhost:3000')
+      request('localhost:' + config.PORT)
         .post('/api/species')
         .send(speciesJSON)
         .end((err, res) => {
@@ -114,7 +115,7 @@ describe('test /species routes', () => {
 
   describe('PUT /species', () => {
     before((done) => {
-      request('localhost:3000')
+      request('localhost:' + config.PORT)
         .post('/api/species')
         .send(speciesJSON)
         .end((err, res) => {
@@ -127,7 +128,7 @@ describe('test /species routes', () => {
     });
 
     after((done) => {
-      request('localhost:3000')
+      request('localhost:' + config.PORT)
         .delete('/api/species/' + speciesId)
         .end((err, res) => {
           expect(err).to.equal(null);
@@ -138,7 +139,7 @@ describe('test /species routes', () => {
     });
 
     it('should respond to PUT /species/:user', (done) => {
-      request('localhost:3000')
+      request('localhost:' + config.PORT)
         .put('/api/species/' + speciesId)
         .send({species: 'poodle'})
         .end((err, res) => {
@@ -158,7 +159,7 @@ describe('test /species routes', () => {
 
   describe('DELETE /species', () => {
     before((done) => {
-      request('localhost:3000')
+      request('localhost:' + config.PORT)
         .post('/api/species')
         .send(speciesJSON)
         .end((err, res) => {
@@ -171,7 +172,7 @@ describe('test /species routes', () => {
     });
 
     it('should respond to DELETE /species/:user', (done) => {
-      request('localhost:3000')
+      request('localhost:' + config.PORT)
         .delete('/api/species/' + speciesId)
         .end((err, res) => {
           expect(err).to.equal(null);

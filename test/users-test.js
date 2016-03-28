@@ -3,6 +3,7 @@
 let chai = require('chai');
 let chaiHttp = require('chai-http');
 require(__dirname + '/../server.js');
+let config = require(__dirname + '/../config/env.js');
 
 chai.use(chaiHttp);
 let request = chai.request;
@@ -18,7 +19,7 @@ let userJSON = {
 describe('test /users routes', () => {
   describe('GET /users/*', () => {
     before((done) => {
-      request('localhost:3000')
+      request('localhost:' + config.PORT)
         .post('/api/users')
         .send(userJSON)
         .end((err, res) => {
@@ -31,7 +32,7 @@ describe('test /users routes', () => {
     });
 
     after((done) => {
-      request('localhost:3000')
+      request('localhost:' + config.PORT)
         .delete('/api/users/' + userId)
         .end((err, res) => {
           expect(err).to.equal(null);
@@ -42,7 +43,7 @@ describe('test /users routes', () => {
     });
 
     it('should respond to GET /users', (done) => {
-      request('localhost:3000')
+      request('localhost:' + config.PORT)
         .get('/api/users')
         .end((err, res) => {
           expect(err).to.equal(null);
@@ -59,7 +60,7 @@ describe('test /users routes', () => {
     });
 
     it('should respond to GET /users/:user', (done) => {
-      request('localhost:3000')
+      request('localhost:' + config.PORT)
         .get('/api/users/' + userId)
         .end((err, res) => {
           expect(err).to.equal(null);
@@ -76,7 +77,7 @@ describe('test /users routes', () => {
 
   describe('POST /users', () => {
     after((done) => {
-      request('localhost:3000')
+      request('localhost:' + config.PORT)
         .delete('/api/users/' + userId)
         .end((err, res) => {
           expect(err).to.equal(null);
@@ -87,7 +88,7 @@ describe('test /users routes', () => {
     });
 
     it('should respond to POST /users', (done) => {
-      request('localhost:3000')
+      request('localhost:' + config.PORT)
         .post('/api/users')
         .send(userJSON)
         .end((err, res) => {
@@ -108,7 +109,7 @@ describe('test /users routes', () => {
 
   describe('PUT /users', () => {
     before((done) => {
-      request('localhost:3000')
+      request('localhost:' + config.PORT)
         .post('/api/users')
         .send(userJSON)
         .end((err, res) => {
@@ -121,7 +122,7 @@ describe('test /users routes', () => {
     });
 
     after((done) => {
-      request('localhost:3000')
+      request('localhost:' + config.PORT)
         .delete('/api/users/' + userId)
         .end((err, res) => {
           expect(err).to.equal(null);
@@ -132,7 +133,7 @@ describe('test /users routes', () => {
     });
 
     it('should respond to PUT /users/:user', (done) => {
-      request('localhost:3000')
+      request('localhost:' + config.PORT)
         .put('/api/users/' + userId)
         .send({password: 'mynewpassword'})
         .end((err, res) => {
@@ -150,7 +151,7 @@ describe('test /users routes', () => {
 
   describe('DELETE /users', () => {
     before((done) => {
-      request('localhost:3000')
+      request('localhost:' + config.PORT)
         .post('/api/users')
         .send(userJSON)
         .end((err, res) => {
@@ -162,8 +163,21 @@ describe('test /users routes', () => {
         });
     });
 
+    before((done) => {
+      request('localhost:' + config.PORT)
+        .post('/login')
+        .send(userJSON)
+        .end((err, res) => {
+          expect(err).to.equal(null);
+          expect(res).to.have.status(200);
+          expect(res).to.be.json;
+          console.log(res.body);
+          done();
+        });
+    });
+
     it('should respond to DELETE /users/:user', (done) => {
-      request('localhost:3000')
+      request('localhost:' + config.PORT)
         .delete('/api/users/' + userId)
         .end((err, res) => {
           expect(err).to.equal(null);

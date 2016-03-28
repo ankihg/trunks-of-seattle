@@ -2,6 +2,7 @@
 
 module.exports = (router, models) => {
   let User = models.User;
+  let jwtAuth = require(__dirname + '/../lib/authenticate.js');
 
   router.route('/users')
     .get((req, res) => {
@@ -12,7 +13,7 @@ module.exports = (router, models) => {
         res.status(200).json({data: users});
       });
     })
-    .post((req, res) => {
+    .post(jwtAuth, (req, res) => {
       var newUser = new User(req.body);
       newUser.save((err, user) => {
         if (err) {
@@ -31,7 +32,7 @@ module.exports = (router, models) => {
         res.status(200).json(user);
       });
     })
-    .put((req, res) => {
+    .put(jwtAuth, (req, res) => {
       User.findByIdAndUpdate(req.params.user, req.body, {new: true}, (err, user) => {
         if (err) {
           return res.send(err);
@@ -39,7 +40,7 @@ module.exports = (router, models) => {
         res.status(200).json(user);
       });
     })
-    .delete((req, res) => {
+    .delete(jwtAuth, (req, res) => {
       User.findByIdAndRemove(req.params.user, (err, user) => {
         res.status(200).json({message: 'Deleted User', data: user});
       });

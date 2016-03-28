@@ -6,7 +6,6 @@ let publicRouter = express.Router();
 let apiRouter = express.Router();
 let models = require(__dirname + '/models');
 let bodyParser = require('body-parser');
-let mongoose = require('mongoose');
 let morgan = require('morgan');
 let config = require(__dirname + '/config/env.js');
 
