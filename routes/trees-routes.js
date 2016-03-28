@@ -5,7 +5,12 @@ module.exports = (router, models) => {
 
   router.route('/trees')
     .get((req, res) => {
-
+      Tree.find({}, (err, trees)=>{
+        if(err){
+          return res.json({msg: err});
+        }
+        res.json(trees);
+      });
     })
     .post((req, res) => {
 

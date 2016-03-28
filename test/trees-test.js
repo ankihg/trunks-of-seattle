@@ -34,3 +34,12 @@ describe('trees db testing', () => {
   // });
 
 });
+
+describe('Integration testing for /trees routes', ()=>{
+  before((done)=>{
+    
+  });
+  it('should return all trees data',(done)=>{
+
+  });
+});
