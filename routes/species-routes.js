@@ -13,6 +13,14 @@ module.exports = (router, models) => {
       });
     })
     .post((req, res) => {
+      Species.findOne({species: req.body.species}, (err, species) => {
+        if (err) {
+          return res.send(err);
+        }
+        if (species) {
+          return res.json({message: 'Species Already Exists', data: species});
+        }
+      });
       var newSpecies = new Species(req.body);
       newSpecies.save((err, species) => {
         if (err) {
