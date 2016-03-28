@@ -8,31 +8,31 @@ chai.use(chaiHttp);
 let request = chai.request;
 let expect = chai.expect;
 
-let userId;
+let speciesId;
 
 let userJSON = {
   username: 'jamielim',
   password: 'helloworld'
 };
 
-describe('test /users routes', () => {
-  describe('GET /users/*', () => {
+describe('test /species routes', () => {
+  describe('GET /species/*', () => {
     before((done) => {
       request('localhost:3000')
-        .post('/api/users')
+        .post('/api/species')
         .send(userJSON)
         .end((err, res) => {
           expect(err).to.equal(null);
           expect(res).to.have.status(200);
           expect(res).to.be.json;
-          userId = res.body._id;
+          speciesId = res.body._id;
           done();
         });
     });
 
     after((done) => {
       request('localhost:3000')
-        .delete('/api/users/' + userId)
+        .delete('/api/species/' + speciesId)
         .end((err, res) => {
           expect(err).to.equal(null);
           expect(res).to.have.status(200);
@@ -41,9 +41,9 @@ describe('test /users routes', () => {
         });
     });
 
-    it('should respond to GET /users', (done) => {
+    it('should respond to GET /species', (done) => {
       request('localhost:3000')
-        .get('/api/users')
+        .get('/api/species')
         .end((err, res) => {
           expect(err).to.equal(null);
           expect(res).to.have.status(200);
@@ -58,9 +58,9 @@ describe('test /users routes', () => {
         });
     });
 
-    it('should respond to GET /users/:user', (done) => {
+    it('should respond to GET /species/:user', (done) => {
       request('localhost:3000')
-        .get('/api/users/' + userId)
+        .get('/api/species/' + speciesId)
         .end((err, res) => {
           expect(err).to.equal(null);
           expect(res).to.have.status(200);
@@ -74,10 +74,10 @@ describe('test /users routes', () => {
     });
   });
 
-  describe('POST /users', () => {
+  describe('POST /species', () => {
     after((done) => {
       request('localhost:3000')
-        .delete('/api/users/' + userId)
+        .delete('/api/species/' + speciesId)
         .end((err, res) => {
           expect(err).to.equal(null);
           expect(res).to.have.status(200);
@@ -86,12 +86,12 @@ describe('test /users routes', () => {
         });
     });
 
-    it('should respond to POST /users', (done) => {
+    it('should respond to POST /species', (done) => {
       request('localhost:3000')
-        .post('/api/users')
+        .post('/api/species')
         .send(userJSON)
         .end((err, res) => {
-          userId = res.body._id;
+          speciesId = res.body._id;
           expect(err).to.equal(null);
           expect(res).to.have.status(200);
           expect(res).to.be.json;
@@ -106,23 +106,23 @@ describe('test /users routes', () => {
     });
   });
 
-  describe('PUT /users', () => {
+  describe('PUT /species', () => {
     before((done) => {
       request('localhost:3000')
-        .post('/api/users')
+        .post('/api/species')
         .send(userJSON)
         .end((err, res) => {
           expect(err).to.equal(null);
           expect(res).to.have.status(200);
           expect(res).to.be.json;
-          userId = res.body._id;
+          speciesId = res.body._id;
           done();
         });
     });
 
     after((done) => {
       request('localhost:3000')
-        .delete('/api/users/' + userId)
+        .delete('/api/species/' + speciesId)
         .end((err, res) => {
           expect(err).to.equal(null);
           expect(res).to.have.status(200);
@@ -131,9 +131,9 @@ describe('test /users routes', () => {
         });
     });
 
-    it('should respond to PUT /users/:user', (done) => {
+    it('should respond to PUT /species/:user', (done) => {
       request('localhost:3000')
-        .put('/api/users/' + userId)
+        .put('/api/species/' + speciesId)
         .send({password: 'mynewpassword'})
         .end((err, res) => {
           expect(err).to.equal(null);
@@ -148,23 +148,23 @@ describe('test /users routes', () => {
     });
   });
 
-  describe('DELETE /users', () => {
+  describe('DELETE /species', () => {
     before((done) => {
       request('localhost:3000')
-        .post('/api/users')
+        .post('/api/species')
         .send(userJSON)
         .end((err, res) => {
           expect(err).to.equal(null);
           expect(res).to.have.status(200);
           expect(res).to.be.json;
-          userId = res.body._id;
+          speciesId = res.body._id;
           done();
         });
     });
 
-    it('should respond to DELETE /users/:user', (done) => {
+    it('should respond to DELETE /species/:user', (done) => {
       request('localhost:3000')
-        .delete('/api/users/' + userId)
+        .delete('/api/species/' + speciesId)
         .end((err, res) => {
           expect(err).to.equal(null);
           expect(res).to.have.status(200);

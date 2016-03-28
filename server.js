@@ -12,6 +12,7 @@ let config = require(__dirname + '/config/env.js');
 
 require(__dirname + '/routes/login-routes')(publicRouter, models);
 require(__dirname + '/routes/neighborhoods-routes')(apiRouter, models);
+require(__dirname + '/routes/species-routes')(apiRouter, models);
 require(__dirname + '/routes/trees-routes')(apiRouter, models);
 require(__dirname + '/routes/users-routes')(apiRouter, models);
 

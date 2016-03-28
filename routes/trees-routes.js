@@ -10,11 +10,4 @@ module.exports = (router, models) => {
     .post((req, res) => {
 
     })
-    .get('/genus',(req, res) => {
-
-    })
-    .get('/species',(req, res) => {
-
-    });
-
 };
