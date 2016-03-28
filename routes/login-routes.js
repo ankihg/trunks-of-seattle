@@ -5,7 +5,7 @@ module.exports = (router, models) => {
 
   router.route('/login')
     .post((req, res) => {
-      let authorizationArray = req.headers.authorization.split(' ');
       
+
     });
 };
