@@ -39,9 +39,9 @@ const Species = models.Species;
 describe('Integration testing for /trees routes', ()=>{
   let speciesTest;
   let speciesTestId;
+  let treeId;
   before((done)=>{
     speciesTest = new Species({genus: 'prunus', species: 'Plam', commonName: 'Palm tree'});
-
     speciesTest.save((err, species)=>{
       if(err){
         console.log('err :' + err);
@@ -55,20 +55,34 @@ describe('Integration testing for /trees routes', ()=>{
           console.log('err :' + err);
           return;
         }
+        treeId = tree._id;
         console.log('New Tree input  :' + tree);
         done();
       });
     });
-
+  });
+  after((done)=>{
+    request('localhost:3000')
+    .delete('/trees/' + treeId)
+    .end((err, res)=>{
+      expect(err).to.have.null;
+      expect(res.body).to.have('object');
+    });
+    request('localhost:3000')
+    .delete('/species/' + speciesTestId)
+    .end((err, res)=>{
+      expect(err).to.have.null;
+      expect(res.body).to.have('object');
+      done();
+    });
   });
   it('should return all trees data',(done)=>{
     request('localhost:3000')
     .get('/api/trees')
     .end((err, res)=>{
-      debugger;
       expect(err).to.be.null;
       expect(res.body).to.be.an('array');
-      expect(res.body[0]).to.have.property('species');
+      expect(res.body).to.have.property('species');
       done();
     });
   });
