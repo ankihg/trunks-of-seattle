@@ -5,6 +5,7 @@ const fs = require('fs');
 module.exports = (router, authenticate, models) => {
 
   const Photo = models.Photo;
+  const Tree = models.Tree;
 
   router.route('/photos/post')
   .get((req, res) => {
@@ -18,6 +19,7 @@ module.exports = (router, authenticate, models) => {
       '<body>'+
       '<form action="/photos/upload" enctype="multipart/form-data" '+
       'method="post">'+
+      '<input type="text" name="cityID"></br>'+
       '<input type="file" name="upload">'+
       '<input type="submit" value="Upload file" />'+
       '</form>'+
@@ -31,8 +33,16 @@ module.exports = (router, authenticate, models) => {
   .post((req, res) => {
     let form = new formidable.IncomingForm();
     form.parse(req, (err, fields, files) => {
-      let newPhoto = new Photo();
-      newPhoto.postToFlickr(files);
+      console.log(fields.cityID);
+      Tree.findOne({cityID:fields.cityID})
+      .populate('species')
+      .exec((err, tree) => {
+        if (err) return res.status(500).json({msg:'error finding treee', err:err});
+        if (!tree) return res.status(400).json({msg:'tree not found'});
+
+        let newPhoto = new Photo();
+        newPhoto.postToFlickr(files, tree);
+      });
     });
   });
 
