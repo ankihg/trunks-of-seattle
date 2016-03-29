@@ -18,22 +18,19 @@ module.exports = (mongoose, models) => {
   });
 
   PhotoSchema.methods.postToFlickr = function(file) {
-    console.log(require('fs').readFileSync(__dirname+'/../storage/plz.jpg'));
 
     Flickr.authenticate(FlickrOptions, function(error, flickr) {
     var uploadOptions = {
       photos: [{
         title: 'plz',
-        photo: fs.createReadStream(__dirname+'/../storage/plz.jpg')
+        photo: file.upload.path //fs.createReadStream(file.path)
       }]
     };
-    console.log(uploadOptions);
 
     Flickr.upload(uploadOptions, FlickrOptions, function(err, result) {
       if(err) {
         return console.error(error);
       }
-      console.log(result);
       console.log("photos uploaded", result);
     });
   });

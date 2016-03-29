@@ -31,9 +31,7 @@ module.exports = (router, authenticate, models) => {
   .post((req, res) => {
     let form = new formidable.IncomingForm();
     form.parse(req, (err, fields, files) => {
-      console.log(files.upload.path);
       let newPhoto = new Photo();
-      // console.log(files);
       newPhoto.postToFlickr(files);
     });
   });
