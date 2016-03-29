@@ -18,13 +18,13 @@ module.exports = (router, models) => {
         if(err){
           return res.json({msg: err});
         }
-        res.json('New tree data has been saved! ' + tree);
+        res.json(tree);
       });
     });
 
   router.route('/trees/:tree')
     .get((req, res) => {
-      Tree.findOne({_id: req.params.id}, (err, tree)=>{
+      Tree.findOne({_id: req.params.tree}, (err, tree)=>{
         if(err){
           return res.json({msg: err});
         }
@@ -32,15 +32,15 @@ module.exports = (router, models) => {
       });
     })
     .put((req, res) => {
-      Tree.findOneAndUpdate({_id: req.params.id}, {$set: req.body }, {new: true}, (err, data)=>{
+      Tree.findOneAndUpdate({_id: req.params.tree}, {$set: req.body }, {new: true}, (err, data)=>{
         if(err){
           return res.json({msg: err});
         }
-        res.json('Data updated successfully : ' + data);
+        res.json(data);
       });
     })
     .delete((req, res) => {
-      Tree.findOneAndRemove({_id: req.params.id}, (err, data)=>{
+      Tree.findOneAndRemove({_id: req.params.tree}, (err, data)=>{
         if(err){
           return res.json({msg: err});
         }
@@ -50,18 +50,12 @@ module.exports = (router, models) => {
 
   router.route('/trees/species/:species')
     .get((req, res) => {
-      Tree.find({species: req.params.id}, (err, tree)=>{
+      Tree.find({species: req.params.species}, (err, tree)=>{
         if(err){
           return res.json({msg: err});
         }
         res.json(tree);
       });
-    })
-    .put((req, res) => {
-      // let id = req.
-    })
-    .delete((req, res) => {
-
     });
 
   router.route('/trees/species/:species/neighborhoods/:neighborhood')
