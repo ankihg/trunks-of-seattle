@@ -62,17 +62,17 @@ describe('Integration testing for /trees routes', ()=>{
     });
   });
   after((done)=>{
-    request('localhost:3000')
-    .delete('/trees/' + treeId)
-    .end((err, res)=>{
-      expect(err).to.have.null;
-      expect(res.body).to.have('object');
+    Tree.remove({_id: treeId}, (err, data)=>{
+      if(err){
+        return console.log(err);
+      }
+      console.log(data);
     });
-    request('localhost:3000')
-    .delete('/species/' + speciesTestId)
-    .end((err, res)=>{
-      expect(err).to.have.null;
-      expect(res.body).to.have('object');
+    Species.remove({_id: speciesTestId},(err, data)=>{
+      if(err){
+        return console.log('test data not deleted');
+      }
+      console.log('test data deleted!' + data);
       done();
     });
   });
@@ -82,7 +82,7 @@ describe('Integration testing for /trees routes', ()=>{
     .end((err, res)=>{
       expect(err).to.be.null;
       expect(res.body).to.be.an('array');
-      expect(res.body).to.have.property('species');
+      expect(res.body[0]).to.have.property('species');
       done();
     });
   });
