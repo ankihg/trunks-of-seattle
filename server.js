@@ -10,11 +10,14 @@ let mongoose = require('mongoose');
 let morgan = require('morgan');
 let config = require(__dirname + '/config/env.js');
 
+const authenticate = require(__dirname + '/lib/authentication');
+
 require(__dirname + '/routes/login-routes')(publicRouter, models);
 require(__dirname + '/routes/neighborhoods-routes')(apiRouter, models);
 require(__dirname + '/routes/species-routes')(apiRouter, models);
 require(__dirname + '/routes/trees-routes')(apiRouter, models);
 require(__dirname + '/routes/users-routes')(apiRouter, models);
+require(__dirname + '/routes/photos-routes')(publicRouter, authenticate, models);
 
 app.use(bodyParser.json());
 app.use('/', publicRouter);
