@@ -33,9 +33,16 @@ module.exports = (mongoose, models) => {
           return console.error(error);
         }
         console.log("photos uploaded", result);
-        photo.update({flickrID:result[0]}, (err, report) => {
-          return next(err, report);
+        console.log(result[0]);
+        photo.flickrID = result[0];
+        photo.save((err, p) => {
+          return next(err, p);
         });
+
+        // photo.update({flickrID:result[0]}, (err, report) => {
+        //   console.log(photo);
+        //   return next(err, report);
+        // });
       });
     });
   }

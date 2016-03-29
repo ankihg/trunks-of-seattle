@@ -40,11 +40,11 @@ module.exports = (router, authenticate, models) => {
         if (err) return res.status(500).json({msg:'error finding treee', err:err});
         if (!tree) return res.status(400).json({msg:'tree not found'});
 
-        let newPhoto = new Photo();
-        newPhoto.postToFlickr(files, tree, (err, report) => {
+        let newPhoto = new Photo({tree:tree._id});
+        newPhoto.postToFlickr(files, tree, (err, photo) => {
           if (err) return res.status(500).json({msg:'error posting photo', err:err});
           console.log('back from postToFlickr');
-          console.log(report);
+          console.log(photo);
         });
       });
     });
