@@ -20,11 +20,16 @@ module.exports = (mongoose, models) => {
   PhotoSchema.methods.postToFlickr = function(filepath, tree, next) {
 
     let photo = this;
+    let desc = `${tree.species.genus} ${tree.species.species} at latitute:${tree.lat} and longitude:${tree.lng}`;
+    if (tree.address) desc.concat(` near ${tree.address}`);
+
     Flickr.authenticate(FlickrOptions, function(error, flickr) {
       var uploadOptions = {
         photos: [{
           title: tree.species.commonName,
-          photo: filepath //fs.createReadStream(file.path)
+          photo: filepath,
+          description: desc,
+          tags: [tree.species.commonName, `${tree.species.genus} ${tree.species.species}`, 'trees', 'Seattle', 'Trunks of Seattle']
         }]
       };
 

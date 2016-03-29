@@ -40,7 +40,7 @@ describe('crud testing for resource photos', () => {
     });
   });
 
-  it('should post a photo', (done) => {
+  it('post a photo', (done) => {
     request('localhost:'+config.PORT)
     .post('/photos')
     .send({filepath:path, tree:tree})
@@ -51,7 +51,7 @@ describe('crud testing for resource photos', () => {
     });
   });
 
-  it('should get all photos', (done) =>{
+  it('get all photos', (done) =>{
     request('localhost:'+config.PORT)
     .get('/photos')
     .end((err, res) => {
@@ -62,9 +62,19 @@ describe('crud testing for resource photos', () => {
     });
   });
 
+  it('get all photos of tree', (done) => {
+    request('localhost:'+config.PORT)
+    .get('/photos/tree/'+tree._id)
+    .end((err, res) => {
+      expect(err).eql(null);
+      expect(res.body.photos.length).eql(1);
+      done();
+    });
+  });
+
   after((done) => {
     Photo.remove({}, (err) => {
-      // Tree.remove(tree);
+      if (err) return console.log(err);
       console.log('photos rmeoved');
       done();
     });
