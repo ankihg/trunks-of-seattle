@@ -11,9 +11,7 @@ module.exports = (router, authenticate, models) => {
   .get((req, res) => {
     console.log('get photos');
     Photo.find({}, (err, photos) => {
-      if (err) {
-        console.log(err);
-        return res.status(500).json({msg:'error reading photos', err:err});}
+      if (err) return res.status(500).json({msg:'error reading photos', err:err});
       return res.status(200).json({photos});
     })
   })
@@ -23,6 +21,17 @@ module.exports = (router, authenticate, models) => {
       if (err) return res.status(500).json({msg:'error posting photo', err:err});
       return res.status(200).json({msg:'photo upload successful'});
     });
+  });
+
+  router.route('/photos/tree/:tree')
+  .get((req, res) => {
+    console.log('get photos of tree');
+    Photo.find({tree:req.params.tree}, (err, photos) => {
+      if (err) return res.status(500).json({msg:'error reading photos', err:err});
+      console.log('made it past err');
+      console.log(photos);
+      return res.status(200).json({photos});
+    })
   });
 
   router.route('/photos/post')
