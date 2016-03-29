@@ -1,6 +1,6 @@
 'use strict';
 
-module.exports = (router, models) => {
+module.exports = (router, models, client) => {
   let Species = models.Species;
 
   router.route('/species')
@@ -36,7 +36,16 @@ module.exports = (router, models) => {
         if (err) {
           return res.send(err);
         }
-        res.status(200).json(species);
+        client.getArticle(species.species, (err, data)=>{
+          if(err){
+            res.json({msg: err});
+            return;
+          }
+          res.status(200).json({
+            founditem: species,
+            wiki: data
+          });
+        });//end of wiki
       });
     })
     .put((req, res) => {
