@@ -18,7 +18,6 @@ module.exports = (mongoose, models) => {
   });
 
   PhotoSchema.methods.postToFlickr = function(filepath, tree, next) {
-    console.log('POST TO FLICKR');
 
     let photo = this;
     Flickr.authenticate(FlickrOptions, function(error, flickr) {
@@ -32,7 +31,6 @@ module.exports = (mongoose, models) => {
       Flickr.upload(uploadOptions, FlickrOptions, function(err, result) {
         if (err) return next(err);
         console.log("photos uploaded", result);
-        console.log(result[0]);
         photo.flickrID = result[0];
         photo.save((err, p) => {
           return next(err, p);

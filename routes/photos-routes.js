@@ -8,6 +8,15 @@ module.exports = (router, authenticate, models) => {
   const Tree = models.Tree;
 
   router.route('/photos')
+  .get((req, res) => {
+    console.log('get photos');
+    Photo.find({}, (err, photos) => {
+      if (err) {
+        console.log(err);
+        return res.status(500).json({msg:'error reading photos', err:err});}
+      return res.status(200).json({photos});
+    })
+  })
   .post((req, res) => {
     let newPhoto = new Photo({tree:req.body.tree._id});
     newPhoto.postToFlickr(req.body.filepath, req.body.tree, (err, photo) => {

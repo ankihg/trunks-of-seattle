@@ -19,6 +19,7 @@ describe('crud testing for resource photos', () => {
 
   let tree;
   let path = __dirname + '/../storage/plz.jpg';
+  let photo;
 
   before((done) => {
 
@@ -39,7 +40,6 @@ describe('crud testing for resource photos', () => {
     });
   });
 
-
   it('should post a photo', (done) => {
     request('localhost:'+config.PORT)
     .post('/photos')
@@ -51,5 +51,23 @@ describe('crud testing for resource photos', () => {
     });
   });
 
+  it('should get all photos', (done) =>{
+    request('localhost:'+config.PORT)
+    .get('/photos')
+    .end((err, res) => {
+      expect(err).eql(null);
+      expect(res.body.photos.length).eql(1);
+      photo = res.body.photos[0];
+      done();
+    });
+  });
+
+  after((done) => {
+    Photo.remove({}, (err) => {
+      // Tree.remove(tree);
+      console.log('photos rmeoved');
+      done();
+    });
+  });
 
 });
