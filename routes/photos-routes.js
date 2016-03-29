@@ -7,6 +7,15 @@ module.exports = (router, authenticate, models) => {
   const Photo = models.Photo;
   const Tree = models.Tree;
 
+  router.route('/photos')
+  .post((req, res) => {
+    let newPhoto = new Photo({tree:req.body.tree._id});
+    newPhoto.postToFlickr(req.body.filepath, req.body.tree, (err, photo) => {
+      if (err) return res.status(500).json({msg:'error posting photo', err:err});
+      return res.status(200).json({msg:'photo upload successful'});
+    });
+  });
+
   router.route('/photos/post')
   .get((req, res) => {
     console.log('get post photos');
@@ -41,7 +50,7 @@ module.exports = (router, authenticate, models) => {
         if (!tree) return res.status(400).json({msg:'tree not found'});
 
         let newPhoto = new Photo({tree:tree._id});
-        newPhoto.postToFlickr(files, tree, (err, photo) => {
+        newPhoto.postToFlickr(files.upload.path, tree, (err, photo) => {
           if (err) return res.status(500).json({msg:'error posting photo', err:err});
           console.log('back from postToFlickr');
           console.log(photo);

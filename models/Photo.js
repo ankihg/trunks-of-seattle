@@ -17,21 +17,20 @@ module.exports = (mongoose, models) => {
     tree: {type: mongoose.Schema.Types.ObjectId, ref: 'Tree'}
   });
 
-  PhotoSchema.methods.postToFlickr = function(file, tree, next) {
+  PhotoSchema.methods.postToFlickr = function(filepath, tree, next) {
+    console.log('POST TO FLICKR');
 
     let photo = this;
     Flickr.authenticate(FlickrOptions, function(error, flickr) {
       var uploadOptions = {
         photos: [{
           title: tree.species.commonName,
-          photo: file.upload.path //fs.createReadStream(file.path)
+          photo: filepath //fs.createReadStream(file.path)
         }]
       };
 
       Flickr.upload(uploadOptions, FlickrOptions, function(err, result) {
-        if(err) {
-          return console.error(error);
-        }
+        if (err) return next(err);
         console.log("photos uploaded", result);
         console.log(result[0]);
         photo.flickrID = result[0];
