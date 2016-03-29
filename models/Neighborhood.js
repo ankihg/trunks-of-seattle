@@ -3,11 +3,10 @@
 module.exports = (mongoose, models) => {
   let NeighborhoodSchema = mongoose.Schema({
     // district: String,
-    // species: [{
+    // trees: [{
     //   type: mongoose.Schema.Types.ObjectId,
-    //   ref: 'Species'
+    //   ref: 'Tree'
     // }]
-    
   });
 
   let Neighborhood = mongoose.model('Neighborhood', NeighborhoodSchema);

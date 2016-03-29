@@ -62,19 +62,10 @@ describe('Integration testing for /trees routes', ()=>{
     });
   });
   after((done)=>{
-    Tree.remove({_id: treeId}, (err, data)=>{
-      if(err){
-        return console.log(err);
-      }
-      console.log(data);
-    });
-    Species.remove({_id: speciesTestId},(err, data)=>{
-      if(err){
-        return console.log('test data not deleted');
-      }
-      console.log('test data deleted!' + data);
-      done();
-    });
+    Tree.remove({_id: treeId});
+    Species.remove({_id: speciesTestId});
+    Tree.remove({species: 'cherry'});
+    done();
   });
   it('should return all trees data',(done)=>{
     request('localhost:3000')
@@ -83,6 +74,52 @@ describe('Integration testing for /trees routes', ()=>{
       expect(err).to.be.null;
       expect(res.body).to.be.an('array');
       expect(res.body[0]).to.have.property('species');
+      done();
+    });
+  });
+  it('should create a new set of tree data', (done)=>{
+    request('localhost:3000')
+    .post('/api/trees')
+    .send({lat: 23445, lng: 67890, cityID: 'sjdhfk'})
+    .end((err, res)=>{
+      // debugger;
+      expect(err).to.be.null;
+      expect(res.body).to.have.an('object');
+      expect(res.body).to.have.property('_id');
+      expect(res.body).to.have.property('lat');
+      done();
+    });
+  });
+  it('should only GET a specific id tree', (done)=>{
+    request('localhost:3000')
+    .get('/api/trees/' + treeId)
+    .end((err, res)=>{
+      expect(err).to.be.null;
+      expect(res.body).to.have.an('object');
+      expect(res.body).to.have.property('_id');
+      expect(res.body._id).to.have.string(treeId);
+      done();
+    });
+  });
+  it('should PUT updates into the specific id', (done)=>{
+    request('localhost:3000')
+    .put('/api/trees/' + treeId)
+    .send({cityID: 'newcityID'})
+    .end((err, res)=>{
+      expect(err).to.be.null;
+      expect(res.body).to.have.an('object');
+      expect(res.body).to.have.property('cityID');
+      expect(res.body.cityID).to.equal('newcityID');
+      done();
+    });
+  });
+  it('should GET specific species from trees', (done)=>{
+    request('localhost:3000')
+    .get('/api/trees/species/' + speciesTestId)
+    .end((err, res)=>{
+      expect(err).to.be.null;
+      expect(res.body).to.have.an('array');
+      expect(res.body[0].species).to.have.string(speciesTestId);
       done();
     });
   });

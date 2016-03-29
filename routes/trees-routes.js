@@ -18,7 +18,7 @@ module.exports = (router, models) => {
         if(err){
           return res.json({msg: err});
         }
-        res.json('New tree data has been saved! ' + tree);
+        res.json(tree);
       });
     });
 
@@ -36,7 +36,7 @@ module.exports = (router, models) => {
         if(err){
           return res.json({msg: err});
         }
-        res.json('Data updated successfully: ' + data);
+        res.json(data);
       });
     })
     .delete((req, res) => {
@@ -55,22 +55,6 @@ module.exports = (router, models) => {
           return res.json({msg: err});
         }
         res.json(tree);
-      });
-    })
-    .put((req, res) => {
-      Tree.update({species: req.params.species}, {$inc: req.body} ,{multi: true},(err, tree)=>{
-        if(err){
-          return res.json({msg: err});
-        }
-        res.json(tree);
-      });
-    })
-    .delete((req, res) => {
-      Tree.remove({species: req.params.species}, (err, data)=>{
-        if(err){
-          return res.json({msg: err});
-        }
-        res.json(data);
       });
     });
 
