@@ -10,7 +10,7 @@ module.exports = (router, models) => {
         if (err) {
           return res.send(err);
         }
-        res.status(200).json({data: users});
+        res.status(200).json({message: 'Returned All Users', data: users});
       });
     })
     .post((req, res) => {
@@ -20,7 +20,7 @@ module.exports = (router, models) => {
         }
 
         if (user) {
-          return res.json({message: 'User Already Exists', user: user});
+          return res.json({message: 'User Already Exists', data: user});
         }
 
         if (!user) {
@@ -31,7 +31,7 @@ module.exports = (router, models) => {
             if (err) {
               return res.json({message: 'Error Saving New User', error: err});
             }
-            res.status(200).json({token: user.generateToken(), user: user});
+            res.status(200).json({message: 'Created User', token: user.generateToken(), data: user});
           })
         }
       });
@@ -43,7 +43,7 @@ module.exports = (router, models) => {
         if (err) {
           return res.send(err);
         }
-        res.status(200).json(user);
+        res.status(200).json({message: 'Returned User', data: user});
       });
     })
     .put(jwtAuth, (req, res) => {
@@ -51,12 +51,12 @@ module.exports = (router, models) => {
         if (err) {
           return res.send(err);
         }
-        res.status(200).json(user);
+        res.status(200).json({message: 'Updated User', data: user});
       });
     })
     .delete(jwtAuth, (req, res) => {
       User.findByIdAndRemove(req.params.user, (err, user) => {
-        res.status(200).json({message: 'Deleted User', user: user});
+        res.status(200).json({message: 'Deleted User', data: user});
       });
     });
 };

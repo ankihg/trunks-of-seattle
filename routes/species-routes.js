@@ -10,7 +10,7 @@ module.exports = (router, models, client) => {
         if (err) {
           return res.send(err);
         }
-        res.status(200).json({data: species});
+        res.status(200).json({message: 'Returned All Species', data: species});
       });
     })
     .post(jwtAuth, (req, res) => {
@@ -21,13 +21,14 @@ module.exports = (router, models, client) => {
         if (species) {
           return res.json({message: 'Species Already Exists', data: species});
         }
-      });
-      var newSpecies = new Species(req.body);
-      newSpecies.save((err, species) => {
-        if (err) {
-          return res.send(err);
-        }
-        res.status(200).json(species);
+
+        var newSpecies = new Species(req.body);
+        newSpecies.save((err, species) => {
+          if (err) {
+            return res.send(err);
+          }
+          res.status(200).json({message: 'Created Species', data: species});
+        });
       });
     });
 
@@ -43,7 +44,8 @@ module.exports = (router, models, client) => {
             return;
           }
           res.status(200).json({
-            founditem: species,
+            message: 'Returned Species',
+            data: species,
             wiki: data
           });
         });//end of wiki
@@ -54,7 +56,7 @@ module.exports = (router, models, client) => {
         if (err) {
           return res.send(err);
         }
-        res.status(200).json(species);
+        res.status(200).json({message: 'Updated Species', data: species});
       });
     })
     .delete(jwtAuth, (req, res) => {

@@ -14,7 +14,7 @@ module.exports = (router, models) => {
         }
 
         if (user) {
-          return res.json({message: 'User Already Exists', user: user});
+          return res.json({message: 'User Already Exists', data: user});
         }
 
         if (!user) {
@@ -25,7 +25,7 @@ module.exports = (router, models) => {
             if (err) {
               return res.json({message: 'Error Saving New User', error: err});
             }
-            res.status(200).json({token: user.generateToken(), user: user});
+            res.status(200).json({message: 'User Created', token: user.generateToken(), data: user});
           })
         }
       });
@@ -46,7 +46,7 @@ module.exports = (router, models) => {
         if (!valid) {
           return res.json({message: 'Authentication Failure'});
         }
-        res.status(200).json({token: user.generateToken(), user: user});
+        res.status(200).json({message: 'User Logged In', token: user.generateToken(), data: user});
       });
     });
 };

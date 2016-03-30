@@ -27,13 +27,13 @@ describe('test /signup route', () => {
         expect(res).to.have.status(200);
         expect(res).to.be.json;
         expect(res.body).to.have.property('message');
-        expect(res.body.user).to.have.property('_id');
-        expect(res.body.user).to.have.property('username');
-        expect(res.body.user).to.have.property('password');
+        expect(res.body.data).to.have.property('_id');
+        expect(res.body.data).to.have.property('username');
+        expect(res.body.data).to.have.property('password');
         expect(res.body.message).to.equal('Deleted User');
-        expect(res.body.user._id).to.not.equal(null);
-        expect(res.body.user.username).to.equal('treehuggers');
-        expect(res.body.user.password).to.not.equal(null);
+        expect(res.body.data._id).to.not.equal(null);
+        expect(res.body.data.username).to.equal('treehuggers');
+        expect(res.body.data.password).to.not.equal(null);
         done();
       });
   });
@@ -43,17 +43,17 @@ describe('test /signup route', () => {
       .post('/signup')
       .send(userJSON)
       .end((err, res) => {
-        userId = res.body.user._id;
+        userId = res.body.data._id;
         userToken = res.body.token;
         expect(err).to.equal(null);
         expect(res).to.have.status(200);
         expect(res).to.be.json;
         expect(res.body).to.have.property('token');
-        expect(res.body.user).to.have.property('username');
-        expect(res.body.user).to.have.property('password');
+        expect(res.body.data).to.have.property('username');
+        expect(res.body.data).to.have.property('password');
         expect(res.body.token).to.not.equal(null);
-        expect(res.body.user.username).to.equal('treehuggers');
-        expect(res.body.user.password).to.not.equal(null);
+        expect(res.body.data.username).to.equal('treehuggers');
+        expect(res.body.data.password).to.not.equal(null);
         done();
       });
   });
@@ -65,17 +65,17 @@ describe('test /login route', () => {
       .post('/signup')
       .send(userJSON)
       .end((err, res) => {
-        userId = res.body.user._id;
+        userId = res.body.data._id;
         userToken = res.body.token;
         expect(err).to.equal(null);
         expect(res).to.have.status(200);
         expect(res).to.be.json;
         expect(res.body).to.have.property('token');
-        expect(res.body.user).to.have.property('username');
-        expect(res.body.user).to.have.property('password');
+        expect(res.body.data).to.have.property('username');
+        expect(res.body.data).to.have.property('password');
         expect(res.body.token).to.not.equal(null);
-        expect(res.body.user.username).to.equal('treehuggers');
-        expect(res.body.user.password).to.not.equal(null);
+        expect(res.body.data.username).to.equal('treehuggers');
+        expect(res.body.data.password).to.not.equal(null);
         done();
       });
   });
@@ -89,13 +89,13 @@ describe('test /login route', () => {
         expect(res).to.have.status(200);
         expect(res).to.be.json;
         expect(res.body).to.have.property('message');
-        expect(res.body.user).to.have.property('_id');
-        expect(res.body.user).to.have.property('username');
-        expect(res.body.user).to.have.property('password');
+        expect(res.body.data).to.have.property('_id');
+        expect(res.body.data).to.have.property('username');
+        expect(res.body.data).to.have.property('password');
         expect(res.body.message).to.equal('Deleted User');
-        expect(res.body._id).to.not.equal(null);
-        expect(res.body.user.username).to.equal('treehuggers');
-        expect(res.body.user.password).to.not.equal(null);
+        expect(res.body.data._id).to.not.equal(null);
+        expect(res.body.data.username).to.equal('treehuggers');
+        expect(res.body.data.password).to.not.equal(null);
         done();
       });
   });
@@ -109,11 +109,11 @@ describe('test /login route', () => {
         expect(res).to.have.status(200);
         expect(res).to.be.json;
         expect(res.body).to.have.property('token');
-        expect(res.body.user).to.have.property('username');
-        expect(res.body.user).to.have.property('password');
+        expect(res.body.data).to.have.property('username');
+        expect(res.body.data).to.have.property('password');
         expect(res.body.token).to.not.equal(null);
-        expect(res.body.user.username).to.equal('treehuggers');
-        expect(res.body.user.password).to.not.equal(null);
+        expect(res.body.data.username).to.equal('treehuggers');
+        expect(res.body.data.password).to.not.equal(null);
         done();
       });
   });
@@ -127,11 +127,11 @@ describe('test /login route', () => {
         expect(res).to.have.status(200);
         expect(res).to.be.json;
         expect(res.body).to.have.property('message');
-        expect(res.body.user).to.have.property('username');
-        expect(res.body.user).to.have.property('password');
+        expect(res.body.data).to.have.property('username');
+        expect(res.body.data).to.have.property('password');
         expect(res.body.message).to.equal('User Already Exists');
-        expect(res.body.user.username).to.equal('treehuggers');
-        expect(res.body.user.password).to.not.equal(null);
+        expect(res.body.data.username).to.equal('treehuggers');
+        expect(res.body.data.password).to.not.equal(null);
         done();
       });
   });
