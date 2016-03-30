@@ -136,8 +136,8 @@ describe('Integration testing for /trees routes', ()=>{
       // debugger;
       expect(err).to.be.null;
       expect(res.body).to.have.an('object');
-      expect(res.body).to.have.property('_id');
-      expect(res.body).to.have.property('lat');
+      expect(res.body.data).to.have.property('_id');
+      expect(res.body.data).to.have.property('lat');
       done();
     });
   });
@@ -176,3 +176,425 @@ describe('Integration testing for /trees routes', ()=>{
     });
   });
 });
+
+describe('testing counts for trees', () => {
+  let cherrySpeciesId;
+  let redwoodSpeciesId;
+  let cherryTree1Id;
+  let cherryTree2Id;
+  let redwoodTree1Id;
+  let redwoodTree2Id;
+  let redwoodTree3Id;
+
+  before((done) => {
+    request('localhost:' + config.PORT)
+      .post('/signup')
+      .send(userJSON)
+      .end((err, res) => {
+        userId = res.body.data._id;
+        userToken = res.body.token;
+        expect(err).to.equal(null);
+        expect(res).to.have.status(200);
+        expect(res).to.be.json;
+        expect(res.body).to.have.property('token');
+        expect(res.body.data).to.have.property('username');
+        expect(res.body.data).to.have.property('password');
+        expect(res.body.token).to.not.equal(null);
+        expect(res.body.data.username).to.equal('treehuggers');
+        expect(res.body.data.password).to.not.equal(null);
+        done();
+      });
+  });
+
+  before((done) => {
+    request('localhost:' + config.PORT)
+      .post('/api/species')
+      .set('token', userToken)
+      .send({
+        genus: 'Prunus',
+        species: 'Prunus serrulata',
+        commonName: 'Cherry Blossom'
+      })
+      .end((err, res) => {
+        cherrySpeciesId = res.body.data._id;
+        expect(err).to.equal(null);
+        expect(res).to.have.status(200);
+        expect(res).to.be.json;
+        expect(res.body.data).to.have.property('genus');
+        expect(res.body.data).to.have.property('species');
+        expect(res.body.data).to.have.property('commonName');
+        expect(res.body.data.genus).to.equal('Prunus');
+        expect(res.body.data.species).to.equal('Prunus serrulata');
+        expect(res.body.data.commonName).to.equal('Cherry Blossom');
+        done();
+      });
+  });
+
+  before((done) => {
+    request('localhost:' + config.PORT)
+      .post('/api/species')
+      .set('token', userToken)
+      .send({
+        genus: 'Sequoiadendron',
+        species: 'Sequoiadendron giganteum',
+        commonName: 'Redwood'
+      })
+      .end((err, res) => {
+        redwoodSpeciesId = res.body.data._id;
+        expect(err).to.equal(null);
+        expect(res).to.have.status(200);
+        expect(res).to.be.json;
+        expect(res.body.data).to.have.property('genus');
+        expect(res.body.data).to.have.property('species');
+        expect(res.body.data).to.have.property('commonName');
+        expect(res.body.data.genus).to.equal('Sequoiadendron');
+        expect(res.body.data.species).to.equal('Sequoiadendron giganteum');
+        expect(res.body.data.commonName).to.equal('Redwood');
+        done();
+      });
+  });
+
+  before((done) => {
+    request('localhost:' + config.PORT)
+      .post('/api/trees')
+      .set('token', userToken)
+      .send({
+        species: cherrySpeciesId,
+        lat: 0,
+        lng: 0,
+        cityID: 'TRE-000',
+        plotType: 'private land'
+      })
+      .end((err, res) => {
+        cherryTree1Id = res.body.data._id;
+        expect(err).to.equal(null);
+        expect(res).to.have.status(200);
+        expect(res).to.be.json;
+        expect(res.body.data).to.have.property('species');
+        expect(res.body.data).to.have.property('lat');
+        expect(res.body.data).to.have.property('lng');
+        expect(res.body.data).to.have.property('cityID');
+        expect(res.body.data).to.have.property('plotType');
+        expect(res.body.data.species).to.equal(cherrySpeciesId);
+        expect(res.body.data.lat).to.equal(0);
+        expect(res.body.data.lng).to.equal(0);
+        expect(res.body.data.cityID).to.equal('TRE-000');
+        expect(res.body.data.plotType).to.equal('private land');
+        done();
+      });
+  });
+
+  before((done) => {
+    request('localhost:' + config.PORT)
+      .post('/api/trees')
+      .set('token', userToken)
+      .send({
+        species: cherrySpeciesId,
+        lat: 1,
+        lng: 1,
+        cityID: 'TRE-001',
+        plotType: 'public land'
+      })
+      .end((err, res) => {
+        cherryTree2Id = res.body.data._id;
+        expect(err).to.equal(null);
+        expect(res).to.have.status(200);
+        expect(res).to.be.json;
+        expect(res.body.data).to.have.property('species');
+        expect(res.body.data).to.have.property('lat');
+        expect(res.body.data).to.have.property('lng');
+        expect(res.body.data).to.have.property('cityID');
+        expect(res.body.data).to.have.property('plotType');
+        expect(res.body.data.species).to.equal(cherrySpeciesId);
+        expect(res.body.data.lat).to.equal(1);
+        expect(res.body.data.lng).to.equal(1);
+        expect(res.body.data.cityID).to.equal('TRE-001');
+        expect(res.body.data.plotType).to.equal('public land');
+        done();
+      });
+  });
+
+  before((done) => {
+    request('localhost:' + config.PORT)
+      .post('/api/trees')
+      .set('token', userToken)
+      .send({
+        species: redwoodSpeciesId,
+        lat: 0,
+        lng: 0,
+        cityID: 'TRE-002',
+        plotType: 'private land'
+      })
+      .end((err, res) => {
+        redwoodTree1Id = res.body.data._id;
+        expect(err).to.equal(null);
+        expect(res).to.have.status(200);
+        expect(res).to.be.json;
+        expect(res.body.data).to.have.property('species');
+        expect(res.body.data).to.have.property('lat');
+        expect(res.body.data).to.have.property('lng');
+        expect(res.body.data).to.have.property('cityID');
+        expect(res.body.data).to.have.property('plotType');
+        expect(res.body.data.species).to.equal(redwoodSpeciesId);
+        expect(res.body.data.lat).to.equal(0);
+        expect(res.body.data.lng).to.equal(0);
+        expect(res.body.data.cityID).to.equal('TRE-002');
+        expect(res.body.data.plotType).to.equal('private land');
+        done();
+      });
+  });
+
+  before((done) => {
+    request('localhost:' + config.PORT)
+      .post('/api/trees')
+      .set('token', userToken)
+      .send({
+        species: redwoodSpeciesId,
+        lat: 2,
+        lng: 12,
+        cityID: 'TRE-003',
+        plotType: 'public land'
+      })
+      .end((err, res) => {
+        redwoodTree2Id = res.body.data._id;
+        expect(err).to.equal(null);
+        expect(res).to.have.status(200);
+        expect(res).to.be.json;
+        expect(res.body.data).to.have.property('species');
+        expect(res.body.data).to.have.property('lat');
+        expect(res.body.data).to.have.property('lng');
+        expect(res.body.data).to.have.property('cityID');
+        expect(res.body.data).to.have.property('plotType');
+        expect(res.body.data.species).to.equal(redwoodSpeciesId);
+        expect(res.body.data.lat).to.equal(2);
+        expect(res.body.data.lng).to.equal(12);
+        expect(res.body.data.cityID).to.equal('TRE-003');
+        expect(res.body.data.plotType).to.equal('public land');
+        done();
+      });
+  });
+
+  before((done) => {
+    request('localhost:' + config.PORT)
+      .post('/api/trees')
+      .set('token', userToken)
+      .send({
+        species: redwoodSpeciesId,
+        lat: 4,
+        lng: 3,
+        cityID: 'TRE-004',
+        plotType: 'private land'
+      })
+      .end((err, res) => {
+        redwoodTree3Id = res.body.data._id;
+        expect(err).to.equal(null);
+        expect(res).to.have.status(200);
+        expect(res).to.be.json;
+        expect(res.body.data).to.have.property('species');
+        expect(res.body.data).to.have.property('lat');
+        expect(res.body.data).to.have.property('lng');
+        expect(res.body.data).to.have.property('cityID');
+        expect(res.body.data).to.have.property('plotType');
+        expect(res.body.data.species).to.equal(redwoodSpeciesId);
+        expect(res.body.data.lat).to.equal(4);
+        expect(res.body.data.lng).to.equal(3);
+        expect(res.body.data.cityID).to.equal('TRE-004');
+        expect(res.body.data.plotType).to.equal('private land');
+        done();
+      });
+  });
+
+  after((done) => {
+    request('localhost:' + config.PORT)
+      .delete('/api/trees/' + cherryTree1Id)
+      .set('token', userToken)
+      .end((err, res) => {
+        expect(err).to.equal(null);
+        expect(res).to.have.status(200);
+        expect(res).to.be.json;
+        expect(res.body).to.have.property('message');
+        expect(res.body.message).to.equal('Deleted Tree');
+        done();
+      });
+  });
+
+  after((done) => {
+    request('localhost:' + config.PORT)
+      .delete('/api/trees/' + cherryTree2Id)
+      .set('token', userToken)
+      .end((err, res) => {
+        expect(err).to.equal(null);
+        expect(res).to.have.status(200);
+        expect(res).to.be.json;
+        expect(res.body).to.have.property('message');
+        expect(res.body.message).to.equal('Deleted Tree');
+        done();
+      });
+  });
+
+  after((done) => {
+    request('localhost:' + config.PORT)
+      .delete('/api/trees/' + redwoodTree1Id)
+      .set('token', userToken)
+      .end((err, res) => {
+        expect(err).to.equal(null);
+        expect(res).to.have.status(200);
+        expect(res).to.be.json;
+        expect(res.body).to.have.property('message');
+        expect(res.body.message).to.equal('Deleted Tree');
+        done();
+      });
+  });
+
+  after((done) => {
+    request('localhost:' + config.PORT)
+      .delete('/api/trees/' + redwoodTree2Id)
+      .set('token', userToken)
+      .end((err, res) => {
+        expect(err).to.equal(null);
+        expect(res).to.have.status(200);
+        expect(res).to.be.json;
+        expect(res.body).to.have.property('message');
+        expect(res.body.message).to.equal('Deleted Tree');
+        done();
+      });
+  });
+
+  after((done) => {
+    request('localhost:' + config.PORT)
+      .delete('/api/trees/' + redwoodTree3Id)
+      .set('token', userToken)
+      .end((err, res) => {
+        expect(err).to.equal(null);
+        expect(res).to.have.status(200);
+        expect(res).to.be.json;
+        expect(res.body).to.have.property('message');
+        expect(res.body.message).to.equal('Deleted Tree');
+        done();
+      });
+  });
+
+  after((done) => {
+    request('localhost:' + config.PORT)
+      .delete('/api/species/' + cherrySpeciesId)
+      .set('token', userToken)
+      .end((err, res) => {
+        expect(err).to.equal(null);
+        expect(res).to.have.status(200);
+        expect(res).to.be.json;
+        expect(res.body).to.have.property('message');
+        expect(res.body.data).to.have.property('genus');
+        expect(res.body.data).to.have.property('species');
+        expect(res.body.data).to.have.property('commonName');
+        expect(res.body.message).to.equal('Deleted Species');
+        expect(res.body.data.genus).to.equal('Prunus');
+        expect(res.body.data.species).to.equal('Prunus serrulata');
+        expect(res.body.data.commonName).to.equal('Cherry Blossom');
+        done();
+      });
+  });
+
+  after((done) => {
+    request('localhost:' + config.PORT)
+      .delete('/api/species/' + redwoodSpeciesId)
+      .set('token', userToken)
+      .end((err, res) => {
+        expect(err).to.equal(null);
+        expect(res).to.have.status(200);
+        expect(res).to.be.json;
+        expect(res.body).to.have.property('message');
+        expect(res.body.data).to.have.property('genus');
+        expect(res.body.data).to.have.property('species');
+        expect(res.body.data).to.have.property('commonName');
+        expect(res.body.message).to.equal('Deleted Species');
+        expect(res.body.data.genus).to.equal('Sequoiadendron');
+        expect(res.body.data.species).to.equal('Sequoiadendron giganteum');
+        expect(res.body.data.commonName).to.equal('Redwood');
+        done();
+      });
+  });
+
+  after((done) => {
+    request('localhost:' + config.PORT)
+      .delete('/api/users/' + userId)
+      .set('token', userToken)
+      .end((err, res) => {
+        expect(err).to.equal(null);
+        expect(res).to.have.status(200);
+        expect(res).to.be.json;
+        expect(res.body).to.have.property('message');
+        expect(res.body.data).to.have.property('_id');
+        expect(res.body.data).to.have.property('username');
+        expect(res.body.data).to.have.property('password');
+        expect(res.body.message).to.equal('Deleted User');
+        expect(res.body.data._id).to.not.equal(null);
+        expect(res.body.data.username).to.equal('treehuggers');
+        expect(res.body.data.password).to.not.equal(null);
+        done();
+      });
+  });
+
+  it('should return the count for all trees', (done) => {
+    request('localhost:' + config.PORT)
+      .get('/api/trees/count')
+      .end((err, res) => {
+        expect(err).to.equal(null);
+        expect(res).to.have.status(200);
+        expect(res).to.be.json;
+        expect(res.body).to.have.property('message');
+        expect(res.body.data).to.have.property('count');
+        expect(res.body.message).to.equal('Total Tree Count');
+        expect(res.body.data.count).to.be.above(0);
+        done();
+      });
+  });
+
+  it('should return the count for all species of trees', (done) => {
+    request('localhost:' + config.PORT)
+      .get('/api/trees/species/count')
+      .end((err, res) => {
+        expect(err).to.equal(null);
+        expect(res).to.have.status(200);
+        expect(res).to.be.json;
+        expect(res.body).to.have.property('message');
+        expect(res.body.data).to.be.an('array');
+        expect(res.body.message).to.equal('Total Species Count');
+        expect(res.body.data).to.include({_id: cherrySpeciesId, count: 2});
+        expect(res.body.data).to.include({_id: redwoodSpeciesId, count: 3});
+        done();
+      });
+  });
+
+  it('should return the count for specific species of trees (cherry blossoms)', (done) => {
+    request('localhost:' + config.PORT)
+      .get('/api/trees/species/' + cherrySpeciesId + '/count')
+      .end((err, res) => {
+        expect(err).to.equal(null);
+        expect(res).to.have.status(200);
+        expect(res).to.be.json;
+        expect(res.body).to.have.property('message');
+        expect(res.body.data).to.have.property('speciesId');
+        expect(res.body.data).to.have.property('count');
+        expect(res.body.data.speciesId).to.equal(cherrySpeciesId);
+        expect(res.body.data.count).to.equal(2);
+        done();
+      });
+  });
+
+  it('should return the count for specific species of trees (redwoods)', (done) => {
+    request('localhost:' + config.PORT)
+      .get('/api/trees/species/' + redwoodSpeciesId + '/count')
+      .end((err, res) => {
+        expect(err).to.equal(null);
+        expect(res).to.have.status(200);
+        expect(res).to.be.json;
+        expect(res.body).to.have.property('message');
+        expect(res.body.data).to.have.property('speciesId');
+        expect(res.body.data).to.have.property('count');
+        expect(res.body.data.speciesId).to.equal(redwoodSpeciesId);
+        expect(res.body.data.count).to.equal(3);
+        done();
+      });
+  });
+});
+

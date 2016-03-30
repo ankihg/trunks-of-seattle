@@ -19,7 +19,17 @@ module.exports = (router, models) => {
         if(err){
           return res.json({msg: err});
         }
-        res.json(tree);
+        res.json({message: 'Created Tree', data: tree});
+      });
+    });
+
+  router.route('/trees/count')
+    .get((req, res) => {
+      Tree.find({}).count((err, count) => {
+        if (err) {
+          return res.send(err);
+        }
+        res.status(200).json({message: 'Total Tree Count', data: {count: count}});
       });
     });
 
@@ -45,9 +55,20 @@ module.exports = (router, models) => {
         if(err){
           return res.json({msg: err});
         }
-        res.json(data);
+        res.json({message: 'Deleted Tree', data: data});
       });
     });
+
+  router.route('/trees/species/count')
+    .get((req, res) => {
+      Tree.aggregate([{$group: {_id: '$species', count: {$sum:1}}}, {$sort: {count: -1}}], (err, species) => {
+        if (err) {
+          return res.send(err);
+        }
+        res.status(200).json({message: 'Total Species Count', data: species});
+      });
+    });
+
 
   router.route('/trees/species/:species')
     .get((req, res) => {
@@ -56,6 +77,16 @@ module.exports = (router, models) => {
           return res.json({msg: err});
         }
         res.json(tree);
+      });
+    });
+
+  router.route('/trees/species/:species/count')
+    .get((req, res) => {
+      Tree.find({species: req.params.species}).count((err, count) => {
+        if (err) {
+          return res.send(err);
+        }
+        res.status(200).json({message: 'Total Species Count', data: {speciesId: req.params.species, count: count}});
       });
     });
 
