@@ -47,7 +47,7 @@ module.exports = (mongoose, models) => {
         // });
       });
     });
-  }
+  };
 
   let Photo = mongoose.model('Photo', PhotoSchema);
   models.Photo = Photo;

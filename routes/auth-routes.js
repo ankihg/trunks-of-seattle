@@ -26,7 +26,7 @@ module.exports = (router, models) => {
               return res.json({message: 'Error Saving New User', error: err});
             }
             res.status(200).json({message: 'User Created', token: user.generateToken(), data: user});
-          })
+          });
         }
       });
     });

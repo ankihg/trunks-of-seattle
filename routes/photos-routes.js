@@ -14,7 +14,7 @@ module.exports = (router, models) => {
     Photo.find({}, (err, photos) => {
       if (err) return res.status(500).json({msg:'error reading photos', err:err});
       return res.status(200).json({photos});
-    })
+    });
   })
   .post(jwtAuth, (req, res) => {
     let newPhoto = new Photo({tree:req.body.tree._id});
@@ -32,7 +32,7 @@ module.exports = (router, models) => {
       console.log('made it past err');
       console.log(photos);
       return res.status(200).json({photos});
-    })
+    });
   });
 
   router.route('/photos/post')
