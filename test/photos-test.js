@@ -104,7 +104,7 @@ describe('crud testing for resource photos', () => {
 
   it('get flickr photo object by id', (done) => {
     request('localhost:'+config.PORT)
-    .get('/photos/'+photo._id)
+    .get('/api/photos/'+photo._id)
     .end((err, res) => {
       expect(err).eql(null);
       expect(res.body.data).property('id');

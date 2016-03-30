@@ -15,7 +15,7 @@ require(__dirname + '/routes/neighborhoods-routes')(apiRouter, models);
 require(__dirname + '/routes/species-routes')(apiRouter, models, client);
 require(__dirname + '/routes/trees-routes')(apiRouter, models);
 require(__dirname + '/routes/users-routes')(apiRouter, models);
-require(__dirname + '/routes/photos-routes')(apiRouter, models);
+require(__dirname + '/routes/photos-routes')(apiRouter, publicRouter, models);
 
 app.use(bodyParser.json());
 app.use('/', publicRouter);

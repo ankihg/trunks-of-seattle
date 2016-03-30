@@ -2,7 +2,7 @@
 const formidable = require('formidable');
 const fs = require('fs');
 
-module.exports = (router, models) => {
+module.exports = (router, publicRouter, models) => {
   let jwtAuth = require(__dirname + '/../lib/jwtAuth.js');
 
   const Photo = models.Photo;
@@ -36,7 +36,15 @@ module.exports = (router, models) => {
     });
   });
 
-  router.route('/photos/:photo/view')
+  router.route('/photos/tree/:tree')
+  .get((req, res) => {
+    Photo.find({tree:req.params.tree}, (err, photos) => {
+      if (err) return res.status(500).json({msg:'error reading photos', err:err});
+      return res.status(200).json({photos});
+    });
+  });
+
+  publicRouter.route('/photos/:photo/view')
   .get((req, res) => {
     //http://stackoverflow.com/questions/10353097/flickr-api-include-photo-in-website
     //http://farm{farm-id}.staticflickr.com/{server-id}/{id}_{secret}.jpg
@@ -53,15 +61,7 @@ module.exports = (router, models) => {
     });
   });
 
-  router.route('/photos/tree/:tree')
-  .get((req, res) => {
-    Photo.find({tree:req.params.tree}, (err, photos) => {
-      if (err) return res.status(500).json({msg:'error reading photos', err:err});
-      return res.status(200).json({photos});
-    });
-  });
-
-  router.route('/photos/post')
+  publicRouter.route('/photos/form')
   .get((req, res) => {
     console.log('get post photos');
 
@@ -83,11 +83,10 @@ module.exports = (router, models) => {
     res.status(200).set('Content-Type', 'text/html').send(body);
   });
 
-  router.route('/photos/upload')
-  .post(jwtAuth, (req, res) => {
+  publicRouter.route('/photos/upload')
+  .post((req, res) => {
     let form = new formidable.IncomingForm();
     form.parse(req, (err, fields, files) => {
-      console.log(fields.cityID);
       Tree.findOne({cityID:fields.cityID})
       .populate('species')
       .exec((err, tree) => {
@@ -97,8 +96,7 @@ module.exports = (router, models) => {
         let newPhoto = new Photo({tree:tree._id});
         newPhoto.postToFlickr(files.upload.path, tree, (err, photo) => {
           if (err) return res.status(500).json({msg:'error posting photo', err:err});
-          console.log('back from postToFlickr');
-          console.log(photo);
+          res.redirect('/photos/'+photo._id+'/view');
         });
       });
     });
