@@ -139,8 +139,6 @@ describe('test /users routes', () => {
           expect(err).to.equal(null);
           expect(res).to.have.status(200);
           expect(res).to.be.json;
-          console.log('HERE I AM');
-          console.log(res.body);
           expect(res.body).to.have.property('username');
           expect(res.body).to.have.property('password');
           expect(res.body.username).to.equal('jamielim');
