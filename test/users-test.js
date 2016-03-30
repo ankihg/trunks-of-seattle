@@ -25,7 +25,7 @@ describe('test /users routes', () => {
           expect(err).to.equal(null);
           expect(res).to.have.status(200);
           expect(res).to.be.json;
-          userId = res.body._id;
+          userId = res.body.data._id;
           done();
         });
     });
@@ -95,12 +95,12 @@ describe('test /users routes', () => {
           expect(err).to.equal(null);
           expect(res).to.have.status(200);
           expect(res).to.be.json;
-          expect(res.body).to.have.property('username');
-          expect(res.body.username).to.be.equal('jamielim');
-          expect(res.body).to.have.property('password');
-          expect(res.body.password).to.not.equal(null);
-          expect(res.body).to.have.property('_id');
-          expect(res.body._id).to.not.equal(null);
+          expect(res.body.data).to.have.property('username');
+          expect(res.body.data.username).to.be.equal('jamielim');
+          expect(res.body.data).to.have.property('password');
+          expect(res.body.data.password).to.not.equal(null);
+          expect(res.body.data).to.have.property('_id');
+          expect(res.body.data._id).to.not.equal(null);
           done();
         });
     });
@@ -115,7 +115,7 @@ describe('test /users routes', () => {
           expect(err).to.equal(null);
           expect(res).to.have.status(200);
           expect(res).to.be.json;
-          userId = res.body._id;
+          userId = res.body.data._id;
           done();
         });
     });
@@ -157,7 +157,7 @@ describe('test /users routes', () => {
           expect(err).to.equal(null);
           expect(res).to.have.status(200);
           expect(res).to.be.json;
-          userId = res.body._id;
+          userId = res.body.data._id;
           done();
         });
     });
