@@ -20,13 +20,14 @@ module.exports = (router, models, client) => {
         if (species) {
           return res.json({message: 'Species Already Exists', data: species});
         }
-      });
-      var newSpecies = new Species(req.body);
-      newSpecies.save((err, species) => {
-        if (err) {
-          return res.send(err);
-        }
-        res.status(200).json(species);
+
+        var newSpecies = new Species(req.body);
+        newSpecies.save((err, species) => {
+          if (err) {
+            return res.send(err);
+          }
+          res.status(200).json({message: 'Species created', data:species});
+        });
       });
     });
 
