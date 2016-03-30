@@ -15,11 +15,39 @@ const Species = models.Species;
 const Tree = models.Tree;
 const Photo = models.Photo;
 
+let userId;
+let userToken;
+
+let userJSON = {
+  username: 'treehuggers',
+  password: 'treelovers'
+};
+
 describe('crud testing for resource photos', () => {
 
   let tree;
   let path = __dirname + '/../storage/plz.jpg';
   let photo;
+
+  before((done) => {
+    request('localhost:' + config.PORT)
+      .post('/signup')
+      .send(userJSON)
+      .end((err, res) => {
+        userId = res.body.data._id;
+        userToken = res.body.token;
+        expect(err).to.equal(null);
+        expect(res).to.have.status(200);
+        expect(res).to.be.json;
+        expect(res.body).to.have.property('token');
+        expect(res.body.data).to.have.property('username');
+        expect(res.body.data).to.have.property('password');
+        expect(res.body.token).to.not.equal(null);
+        expect(res.body.data.username).to.equal('treehuggers');
+        expect(res.body.data.password).to.not.equal(null);
+        done();
+      });
+  });
 
   before((done) => {
 
@@ -43,6 +71,7 @@ describe('crud testing for resource photos', () => {
   it('post a photo', (done) => {
     request('localhost:'+config.PORT)
     .post('/photos')
+    .set('token', userToken)
     .send({filepath:path, tree:tree})
     .end((err, res) => {
       expect(err).eql(null);
@@ -80,4 +109,23 @@ describe('crud testing for resource photos', () => {
     });
   });
 
+  after((done) => {
+    request('localhost:' + config.PORT)
+      .delete('/api/users/' + userId)
+      .set('token', userToken)
+      .end((err, res) => {
+        expect(err).to.equal(null);
+        expect(res).to.have.status(200);
+        expect(res).to.be.json;
+        expect(res.body).to.have.property('message');
+        expect(res.body.data).to.have.property('_id');
+        expect(res.body.data).to.have.property('username');
+        expect(res.body.data).to.have.property('password');
+        expect(res.body.message).to.equal('Deleted User');
+        expect(res.body.data._id).to.not.equal(null);
+        expect(res.body.data.username).to.equal('treehuggers');
+        expect(res.body.data.password).to.not.equal(null);
+        done();
+      });
+  });
 });

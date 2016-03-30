@@ -2,6 +2,7 @@
 
 module.exports = (router, models, client) => {
   let Species = models.Species;
+  let jwtAuth = require(__dirname + '/../lib/jwtAuth.js');
 
   router.route('/species')
     .get((req, res) => {
@@ -9,10 +10,10 @@ module.exports = (router, models, client) => {
         if (err) {
           return res.send(err);
         }
-        res.status(200).json({data: species});
+        res.status(200).json({message: 'Returned All Species', data: species});
       });
     })
-    .post((req, res) => {
+    .post(jwtAuth, (req, res) => {
       Species.findOne({species: req.body.species}, (err, species) => {
         if (err) {
           return res.send(err);
@@ -26,7 +27,7 @@ module.exports = (router, models, client) => {
           if (err) {
             return res.send(err);
           }
-          res.status(200).json({message: 'Species created', data:species});
+          res.status(200).json({message: 'Created Species', data: species});
         });
       });
     });
@@ -43,21 +44,22 @@ module.exports = (router, models, client) => {
             return;
           }
           res.status(200).json({
-            founditem: species,
+            message: 'Returned Species',
+            data: species,
             wiki: data
           });
         });//end of wiki
       });
     })
-    .put((req, res) => {
+    .put(jwtAuth, (req, res) => {
       Species.findByIdAndUpdate(req.params.species, req.body, {new: true}, (err, species) => {
         if (err) {
           return res.send(err);
         }
-        res.status(200).json(species);
+        res.status(200).json({message: 'Updated Species', data: species});
       });
     })
-    .delete((req, res) => {
+    .delete(jwtAuth, (req, res) => {
       Species.findByIdAndRemove(req.params.species, (err, species) => {
         if (err) {
           return res.send(err);

@@ -2,6 +2,7 @@
 
 module.exports = (router, models) => {
   let Tree = models.Tree;
+  let jwtAuth = require(__dirname + '/../lib/jwtAuth.js');
 
   router.route('/trees')
     .get((req, res) => {
@@ -12,7 +13,7 @@ module.exports = (router, models) => {
         res.json(trees);
       });
     })
-    .post((req, res) => {
+    .post(jwtAuth, (req, res) => {
       let newTree = new Tree(req.body);
       newTree.save((err, tree)=>{
         if(err){
@@ -31,7 +32,7 @@ module.exports = (router, models) => {
         res.json(tree);
       });
     })
-    .put((req, res) => {
+    .put(jwtAuth, (req, res) => {
       Tree.findOneAndUpdate({_id: req.params.tree}, {$set: req.body }, {new: true}, (err, data)=>{
         if(err){
           return res.json({msg: err});
@@ -39,7 +40,7 @@ module.exports = (router, models) => {
         res.json(data);
       });
     })
-    .delete((req, res) => {
+    .delete(jwtAuth, (req, res) => {
       Tree.findOneAndRemove({_id: req.params.tree}, (err, data)=>{
         if(err){
           return res.json({msg: err});
@@ -62,10 +63,10 @@ module.exports = (router, models) => {
     .get((req, res) => {
 
     })
-    .put((req, res) => {
+    .put(jwtAuth, (req, res) => {
 
     })
-    .delete((req, res) => {
+    .delete(jwtAuth, (req, res) => {
 
     });
 };

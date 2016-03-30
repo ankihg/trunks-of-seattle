@@ -2,7 +2,8 @@
 const formidable = require('formidable');
 const fs = require('fs');
 
-module.exports = (router, authenticate, models) => {
+module.exports = (router, models) => {
+  let jwtAuth = require(__dirname + '/../lib/jwtAuth.js');
 
   const Photo = models.Photo;
   const Tree = models.Tree;
@@ -13,9 +14,9 @@ module.exports = (router, authenticate, models) => {
     Photo.find({}, (err, photos) => {
       if (err) return res.status(500).json({msg:'error reading photos', err:err});
       return res.status(200).json({photos});
-    })
+    });
   })
-  .post((req, res) => {
+  .post(jwtAuth, (req, res) => {
     let newPhoto = new Photo({tree:req.body.tree._id});
     newPhoto.postToFlickr(req.body.filepath, req.body.tree, (err, photo) => {
       if (err) return res.status(500).json({msg:'error posting photo', err:err});
@@ -31,7 +32,7 @@ module.exports = (router, authenticate, models) => {
       console.log('made it past err');
       console.log(photos);
       return res.status(200).json({photos});
-    })
+    });
   });
 
   router.route('/photos/post')
@@ -57,7 +58,7 @@ module.exports = (router, authenticate, models) => {
   });
 
   router.route('/photos/upload')
-  .post((req, res) => {
+  .post(jwtAuth, (req, res) => {
     let form = new formidable.IncomingForm();
     form.parse(req, (err, fields, files) => {
       console.log(fields.cityID);
@@ -76,6 +77,4 @@ module.exports = (router, authenticate, models) => {
       });
     });
   });
-
-
 };

@@ -2,14 +2,15 @@
 
 module.exports = (router, models) => {
   let User = models.User;
+  let jwtAuth = require(__dirname + '/../lib/jwtAuth.js');
 
   router.route('/users')
-    .get((req, res) => {
+    .get(jwtAuth, (req, res) => {
       User.find({}, (err, users) => {
         if (err) {
           return res.send(err);
         }
-        res.status(200).json({data: users});
+        res.status(200).json({message: 'Returned All Users', data: users});
       });
     })
     .post((req, res) => {
@@ -17,38 +18,43 @@ module.exports = (router, models) => {
         if (err) {
           return res.send(err);
         }
+
         if (user) {
           return res.json({message: 'User Already Exists', data: user});
         }
-        var newUser = new User(req.body);
-        newUser.save((err, user) => {
-          if (err) {
-            return res.send(err);
-          }
-          res.status(200).json({message: 'User Created', data: user});
-        });
-      });
 
+        if (!user) {
+          var newUser = new User(req.body);
+          newUser.username = req.body.username;
+          newUser.password = req.body.password;
+          newUser.save((err, user) => {
+            if (err) {
+              return res.json({message: 'Error Saving New User', error: err});
+            }
+            res.status(200).json({message: 'Created User', token: user.generateToken(), data: user});
+          });
+        }
+      });
     });
 
   router.route('/users/:user')
-    .get((req, res) => {
+    .get(jwtAuth, (req, res) => {
       User.findById(req.params.user, (err, user) => {
         if (err) {
           return res.send(err);
         }
-        res.status(200).json(user);
+        res.status(200).json({message: 'Returned User', data: user});
       });
     })
-    .put((req, res) => {
+    .put(jwtAuth, (req, res) => {
       User.findByIdAndUpdate(req.params.user, req.body, {new: true}, (err, user) => {
         if (err) {
           return res.send(err);
         }
-        res.status(200).json(user);
+        res.status(200).json({message: 'Updated User', data: user});
       });
     })
-    .delete((req, res) => {
+    .delete(jwtAuth, (req, res) => {
       User.findByIdAndRemove(req.params.user, (err, user) => {
         res.status(200).json({message: 'Deleted User', data: user});
       });

@@ -4,11 +4,19 @@
 let chai = require('chai');
 let chaiHttp = require('chai-http');
 require(__dirname + '/../server.js');
+let config = require(__dirname + '/../config/env.js');
 
 chai.use(chaiHttp);
 let request = chai.request;
 let expect = chai.expect;
 
+let userId;
+let userToken;
+
+let userJSON = {
+  username: 'treehuggers',
+  password: 'treelovers'
+};
 
 const models = require(__dirname + '/../models');
 const Tree = models.Tree;
@@ -40,6 +48,7 @@ describe('Integration testing for /trees routes', ()=>{
   let speciesTest;
   let speciesTestId;
   let treeId;
+
   before((done)=>{
     speciesTest = new Species({genus: 'prunus', species: 'Plam', commonName: 'Palm tree'});
     speciesTest.save((err, species)=>{
@@ -61,6 +70,47 @@ describe('Integration testing for /trees routes', ()=>{
       });
     });
   });
+
+  before((done) => {
+    request('localhost:' + config.PORT)
+      .post('/signup')
+      .send(userJSON)
+      .end((err, res) => {
+        userId = res.body.data._id;
+        userToken = res.body.token;
+        expect(err).to.equal(null);
+        expect(res).to.have.status(200);
+        expect(res).to.be.json;
+        expect(res.body).to.have.property('token');
+        expect(res.body.data).to.have.property('username');
+        expect(res.body.data).to.have.property('password');
+        expect(res.body.token).to.not.equal(null);
+        expect(res.body.data.username).to.equal('treehuggers');
+        expect(res.body.data.password).to.not.equal(null);
+        done();
+      });
+  });
+
+  after((done) => {
+    request('localhost:' + config.PORT)
+      .delete('/api/users/' + userId)
+      .set('token', userToken)
+      .end((err, res) => {
+        expect(err).to.equal(null);
+        expect(res).to.have.status(200);
+        expect(res).to.be.json;
+        expect(res.body).to.have.property('message');
+        expect(res.body.data).to.have.property('_id');
+        expect(res.body.data).to.have.property('username');
+        expect(res.body.data).to.have.property('password');
+        expect(res.body.message).to.equal('Deleted User');
+        expect(res.body.data._id).to.not.equal(null);
+        expect(res.body.data.username).to.equal('treehuggers');
+        expect(res.body.data.password).to.not.equal(null);
+        done();
+      });
+  });
+
   after((done)=>{
     Tree.remove({_id: treeId});
     Species.remove({_id: speciesTestId});
@@ -80,6 +130,7 @@ describe('Integration testing for /trees routes', ()=>{
   it('should create a new set of tree data', (done)=>{
     request('localhost:3000')
     .post('/api/trees')
+    .set('token', userToken)
     .send({lat: 23445, lng: 67890, cityID: 'sjdhfk'})
     .end((err, res)=>{
       // debugger;
@@ -104,6 +155,7 @@ describe('Integration testing for /trees routes', ()=>{
   it('should PUT updates into the specific id', (done)=>{
     request('localhost:3000')
     .put('/api/trees/' + treeId)
+    .set('token', userToken)
     .send({cityID: 'newcityID'})
     .end((err, res)=>{
       expect(err).to.be.null;
