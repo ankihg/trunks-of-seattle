@@ -63,7 +63,7 @@ module.exports = (router, publicRouter, models) => {
         if (err) return res.status(500).json({msg:'error getting photo from flickr', err:err});
 
         var photoURL = `http://farm${flickrPhoto.farm}.staticflickr.com/${flickrPhoto.server}/${flickrPhoto.id}_${flickrPhoto.secret}.jpg`;
-        var img = `<img src=${photoURL}></img>`
+        var img = `<img src=${photoURL}></img>`;
         return res.status(200).send(img);
       });
     });
