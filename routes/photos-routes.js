@@ -17,8 +17,8 @@ module.exports = (router, publicRouter, models) => {
     });
   })
   .post(jwtAuth, (req, res) => {
-    let newPhoto = new Photo({tree:req.body.tree._id});
-    newPhoto.postToFlickr(req.body.filepath, req.body.tree, (err, photo) => {
+    let newPhoto = new Photo({tree:req.body.tree._id, user:req.user._id});
+    newPhoto.postToFlickr(req.body.filepath, req.body.tree, req.user, (err, photo) => {
       if (err) return res.status(500).json({msg:'error posting photo', err:err});
       return res.status(200).json({msg:'photo upload successful'});
     });

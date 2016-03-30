@@ -14,7 +14,8 @@ const FlickrOptions = {
 module.exports = (mongoose, models) => {
   let PhotoSchema = mongoose.Schema({
     flickrID: String,
-    tree: {type: mongoose.Schema.Types.ObjectId, ref: 'Tree'}
+    tree: {type: mongoose.Schema.Types.ObjectId, ref: 'Tree'},
+    user: {type: mongoose.Schema.Types.ObjectId, ref: 'User'}
   });
 
   PhotoSchema.methods.getFromFlickr = function(next) {
@@ -35,11 +36,15 @@ module.exports = (mongoose, models) => {
     });
   };
 
-  PhotoSchema.methods.postToFlickr = function(filepath, tree, next) {
+  PhotoSchema.methods.postToFlickr = function(filepath, tree, user, next) {
+    console.log('heres the user');
+    console.log(user);
 
     let photo = this;
     let desc = `${tree.species.genus} ${tree.species.species} at latitute:${tree.lat} and longitude:${tree.lng}`;
-    if (tree.address) desc.concat(` near ${tree.address}`);
+    if (tree.address) desc = desc.concat(` near ${tree.address}`);
+    if (user.username) desc = desc.concat(` by user ${user.username}`);
+    console.log(desc);
 
     Flickr.authenticate(FlickrOptions, function(error, flickr) {
       var uploadOptions = {
@@ -47,7 +52,7 @@ module.exports = (mongoose, models) => {
           title: tree.species.commonName,
           photo: filepath,
           description: desc,
-          tags: [tree.cityID, tree.species.commonName, `${tree.species.genus} ${tree.species.species}`, 'trees', 'Seattle', 'Trunks of Seattle']
+          tags: [tree.cityID, tree.species.commonName, `${tree.species.genus} ${tree.species.species}`, `user ${user.username}`, 'trees', 'Seattle', 'Trunks of Seattle']
         }]
       };
 
