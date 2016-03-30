@@ -14,6 +14,7 @@ const models = require(__dirname + '/../models');
 const Species = models.Species;
 const Tree = models.Tree;
 const Photo = models.Photo;
+const User = models.User;
 
 let userId;
 let userToken;
@@ -125,14 +126,6 @@ describe('crud testing for resource photos', () => {
   });
 
   after((done) => {
-    Photo.remove({}, (err) => {
-      if (err) return console.log(err);
-      console.log('photos rmeoved');
-      done();
-    });
-  });
-
-  after((done) => {
     request('localhost:' + config.PORT)
       .delete('/api/users/' + userId)
       .set('token', userToken)
@@ -148,7 +141,17 @@ describe('crud testing for resource photos', () => {
         expect(res.body.data._id).to.not.equal(null);
         expect(res.body.data.username).to.equal('treehuggers');
         expect(res.body.data.password).to.not.equal(null);
-        done();
+
+        Photo.remove({}, (err) => {
+          if (err) return console.log(err);
+          console.log('photos rmeoved');
+
+          User.remove({}, (err) => {
+            if (err) return console.log(err);
+            console.log('users rmeoved');
+            done();
+          });
+        });
       });
   });
 });
