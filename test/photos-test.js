@@ -72,6 +72,15 @@ describe('crud testing for resource photos', () => {
     });
   });
 
+  it('get photo by id', (done) => {
+    request('localhost:'+config.PORT)
+    .get('/photos/'+photo._id)
+    .end((err, res) => {
+      console.log(err);
+      console.log(res);
+    });
+  });
+
   after((done) => {
     Photo.remove({}, (err) => {
       if (err) return console.log(err);

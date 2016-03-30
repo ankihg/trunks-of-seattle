@@ -23,6 +23,15 @@ module.exports = (router, authenticate, models) => {
     });
   });
 
+  router.route('/photos/:photo')
+  .get((req, res) => {
+    Photo.findById(req.params.photo, (err, photo) => {
+      if (err) return res.status(500).json({msg:'error finding photo', err:err});
+      if (!photo) return res.status(400).json({msg:'photo does not exist', err:err});
+      photo.getFromFlickr();
+    })
+  });
+
   router.route('/photos/tree/:tree')
   .get((req, res) => {
     console.log('get photos of tree');

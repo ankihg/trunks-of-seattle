@@ -17,6 +17,19 @@ module.exports = (mongoose, models) => {
     tree: {type: mongoose.Schema.Types.ObjectId, ref: 'Tree'}
   });
 
+  PhotoSchema.methods.getFromFlickr = function() {
+
+    let photo = this;
+
+    Flickr.authenticate(FlickrOptions, function(error, flickr) {
+      console.log(photo.tree);
+      flickr.photos.search({tags:[photo.tree._id]}, (err, result) => {
+        if (err) return console.log(err);
+        console.log(result);
+      })
+    })
+  };
+
   PhotoSchema.methods.postToFlickr = function(filepath, tree, next) {
 
     let photo = this;
@@ -29,7 +42,7 @@ module.exports = (mongoose, models) => {
           title: tree.species.commonName,
           photo: filepath,
           description: desc,
-          tags: [tree.species.commonName, `${tree.species.genus} ${tree.species.species}`, 'trees', 'Seattle', 'Trunks of Seattle']
+          tags: [tree.cityID, tree.species.commonName, `${tree.species.genus} ${tree.species.species}`, 'trees', 'Seattle', 'Trunks of Seattle']
         }]
       };
 
@@ -41,10 +54,6 @@ module.exports = (mongoose, models) => {
           return next(err, p);
         });
 
-        // photo.update({flickrID:result[0]}, (err, report) => {
-        //   console.log(photo);
-        //   return next(err, report);
-        // });
       });
     });
   }
