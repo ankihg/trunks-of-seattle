@@ -27,8 +27,10 @@ let userJSON = {
 describe('crud testing for resource photos', () => {
 
   let tree;
+  let tree2;
   let path = __dirname + '/../storage/plz.jpg';
   let photo;
+  let user2;
 
   before((done) => {
     request('localhost:' + config.PORT)
@@ -40,12 +42,26 @@ describe('crud testing for resource photos', () => {
         expect(err).to.equal(null);
         expect(res).to.have.status(200);
         expect(res).to.be.json;
-        expect(res.body).to.have.property('token');
+        // expect(res.body).to.have.property('token');
         expect(res.body.data).to.have.property('username');
         expect(res.body.data).to.have.property('password');
-        expect(res.body.token).to.not.equal(null);
+        // expect(res.body.token).to.not.equal(null);
         expect(res.body.data.username).to.equal('treehuggers');
         expect(res.body.data.password).to.not.equal(null);
+        done();
+      });
+  });
+
+  before((done)  => {
+    request('localhost:' + config.PORT)
+      .post('/signup')
+      .send({username: 'lawrence-livermore', password: 'altamont16'})
+      .end((err, res) => {
+        expect(err).eql(null);
+        expect(res.body.data.username).eql('lawrence-livermore');
+        expect(res.body).property('token');
+        user2 = res.body.data;
+        user2.token = res.body.token;
         done();
       });
   });
@@ -69,6 +85,24 @@ describe('crud testing for resource photos', () => {
     });
   });
 
+  before((done) => {
+    let newSpecies = new Species({genus:'hildus', species:'mcgardica', commonName:'hilda mcgard'});
+    newSpecies.save((err, species) => {
+      expect(err).eql(null);
+
+      let newTree = new Tree({cityID:'TRE-123', species:species._id, lat:47, lng:-122, plotType:'PAVE'});
+      newTree.save((err, tr) => {
+        expect(err).eql(null);
+        Tree.populate(tr, 'species', (err, tr) => {
+          expect(err).eql(null);
+
+          tree2 = tr;
+          done();
+        });
+      });
+    });
+  });
+
   it('post a photo', (done) => {
     request('localhost:'+config.PORT)
     .post('/api/photos')
@@ -82,12 +116,25 @@ describe('crud testing for resource photos', () => {
     });
   });
 
+  it('post a photo of hildus mcgardica by lawrence-livermore', (done) => {
+    request('localhost:'+config.PORT)
+    .post('/api/photos')
+    .set('token', user2.token)
+    .send({filepath:path, tree:tree2})
+    .end((err, res) => {
+      // console.log(err);
+      expect(err).eql(null);
+      expect(res.body.msg).eql('photo upload successful');
+      done();
+    });
+  });
+
   it('get all photos', (done) =>{
     request('localhost:'+config.PORT)
     .get('/api/photos')
     .end((err, res) => {
       expect(err).eql(null);
-      expect(res.body.photos.length).eql(1);
+      expect(res.body.photos.length).eql(2);
       photo = res.body.photos[0];
       done();
     });
@@ -125,15 +172,27 @@ describe('crud testing for resource photos', () => {
     });
   });
 
-  it('get all photos by user', (done) => {
+  it('get all photos by user treehuggers', (done) => {
     request('localhost:'+config.PORT)
     .get('/api/photos/users/'+userId)
     .end((err, res) => {
       expect(err).eql(null);
       expect(res.body).property('data');
+      expect(res.body.data.length).eql(1);
       done();
     });
-  })
+  });
+
+  it('get all photos by user lawrence-livermore', (done) => {
+    request('localhost:'+config.PORT)
+    .get('/api/photos/users/'+user2._id)
+    .end((err, res) => {
+      expect(err).eql(null);
+      expect(res.body).property('data');
+      expect(res.body.data.length).eql(1);
+      done();
+    });
+  });
 
   after((done) => {
     request('localhost:' + config.PORT)
