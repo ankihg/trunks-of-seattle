@@ -8,12 +8,14 @@ let models = require(__dirname + '/models');
 let bodyParser = require('body-parser');
 let morgan = require('morgan');
 let config = require(__dirname + '/config/env.js');
+let client = require(__dirname + '/lib/wikiBot');
 
 require(__dirname + '/routes/auth-routes')(publicRouter, models);
 require(__dirname + '/routes/neighborhoods-routes')(apiRouter, models);
-require(__dirname + '/routes/species-routes')(apiRouter, models);
+require(__dirname + '/routes/species-routes')(apiRouter, models, client);
 require(__dirname + '/routes/trees-routes')(apiRouter, models);
 require(__dirname + '/routes/users-routes')(apiRouter, models);
+require(__dirname + '/routes/photos-routes')(apiRouter, models);
 
 app.use(bodyParser.json());
 app.use('/', publicRouter);

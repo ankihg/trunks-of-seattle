@@ -10,10 +10,11 @@ let request = chai.request;
 let expect = chai.expect;
 
 let userId;
+let userToken;
 
 let userJSON = {
-  username: 'jamielim',
-  password: 'helloworld'
+  username: 'treehuggers',
+  password: 'treelovers'
 };
 
 describe('test /users routes', () => {
@@ -23,10 +24,17 @@ describe('test /users routes', () => {
         .post('/api/users')
         .send(userJSON)
         .end((err, res) => {
+          userId = res.body.user._id;
+          userToken = res.body.token;
           expect(err).to.equal(null);
           expect(res).to.have.status(200);
           expect(res).to.be.json;
-          userId = res.body._id;
+          expect(res.body).to.have.property('token');
+          expect(res.body.user).to.have.property('username');
+          expect(res.body.user).to.have.property('password');
+          expect(res.body.token).to.not.equal(null);
+          expect(res.body.user.username).to.equal('treehuggers');
+          expect(res.body.user.password).to.not.equal(null);
           done();
         });
     });
@@ -34,6 +42,7 @@ describe('test /users routes', () => {
     after((done) => {
       request('localhost:' + config.PORT)
         .delete('/api/users/' + userId)
+        .set('token', userToken)
         .end((err, res) => {
           expect(err).to.equal(null);
           expect(res).to.have.status(200);
@@ -45,6 +54,7 @@ describe('test /users routes', () => {
     it('should respond to GET /users', (done) => {
       request('localhost:' + config.PORT)
         .get('/api/users')
+        .set('token', userToken)
         .end((err, res) => {
           expect(err).to.equal(null);
           expect(res).to.have.status(200);
@@ -53,7 +63,7 @@ describe('test /users routes', () => {
           data = data[data.length - 1];
           expect(data).to.have.property('username');
           expect(data).to.have.property('password');
-          expect(data.username).to.equal('jamielim');
+          expect(data.username).to.equal('treehuggers');
           expect(data.password).to.not.equal(null);
           done();
         });
@@ -62,13 +72,14 @@ describe('test /users routes', () => {
     it('should respond to GET /users/:user', (done) => {
       request('localhost:' + config.PORT)
         .get('/api/users/' + userId)
+        .set('token', userToken)
         .end((err, res) => {
           expect(err).to.equal(null);
           expect(res).to.have.status(200);
           expect(res).to.be.json;
           expect(res.body).to.have.property('username');
           expect(res.body).to.have.property('password');
-          expect(res.body.username).to.equal('jamielim');
+          expect(res.body.username).to.equal('treehuggers');
           expect(res.body.password).to.not.equal(null);
           done();
         });
@@ -79,6 +90,7 @@ describe('test /users routes', () => {
     after((done) => {
       request('localhost:' + config.PORT)
         .delete('/api/users/' + userId)
+        .set('token', userToken)
         .end((err, res) => {
           expect(err).to.equal(null);
           expect(res).to.have.status(200);
@@ -92,16 +104,17 @@ describe('test /users routes', () => {
         .post('/api/users')
         .send(userJSON)
         .end((err, res) => {
-          userId = res.body._id;
+          userId = res.body.user._id;
+          userToken = res.body.token;
           expect(err).to.equal(null);
           expect(res).to.have.status(200);
           expect(res).to.be.json;
-          expect(res.body).to.have.property('username');
-          expect(res.body.username).to.be.equal('jamielim');
-          expect(res.body).to.have.property('password');
-          expect(res.body.password).to.not.equal(null);
-          expect(res.body).to.have.property('_id');
-          expect(res.body._id).to.not.equal(null);
+          expect(res.body).to.have.property('token');
+          expect(res.body.user).to.have.property('username');
+          expect(res.body.user).to.have.property('password');
+          expect(res.body.token).to.not.equal(null);
+          expect(res.body.user.username).to.equal('treehuggers');
+          expect(res.body.user.password).to.not.equal(null);
           done();
         });
     });
@@ -113,10 +126,17 @@ describe('test /users routes', () => {
         .post('/api/users')
         .send(userJSON)
         .end((err, res) => {
+          userId = res.body.user._id;
+          userToken = res.body.token;
           expect(err).to.equal(null);
           expect(res).to.have.status(200);
           expect(res).to.be.json;
-          userId = res.body._id;
+          expect(res.body).to.have.property('token');
+          expect(res.body.user).to.have.property('username');
+          expect(res.body.user).to.have.property('password');
+          expect(res.body.token).to.not.equal(null);
+          expect(res.body.user.username).to.equal('treehuggers');
+          expect(res.body.user.password).to.not.equal(null);
           done();
         });
     });
@@ -124,6 +144,7 @@ describe('test /users routes', () => {
     after((done) => {
       request('localhost:' + config.PORT)
         .delete('/api/users/' + userId)
+        .set('token', userToken)
         .end((err, res) => {
           expect(err).to.equal(null);
           expect(res).to.have.status(200);
@@ -135,14 +156,15 @@ describe('test /users routes', () => {
     it('should respond to PUT /users/:user', (done) => {
       request('localhost:' + config.PORT)
         .put('/api/users/' + userId)
-        .send({password: 'mynewpassword'})
+        .set('token', userToken)
+        .send({username: 'treehuggers2'})
         .end((err, res) => {
           expect(err).to.equal(null);
           expect(res).to.have.status(200);
           expect(res).to.be.json;
           expect(res.body).to.have.property('username');
           expect(res.body).to.have.property('password');
-          expect(res.body.username).to.equal('jamielim');
+          expect(res.body.username).to.equal('treehuggers2');
           expect(res.body.password).to.not.equal(null);
           done();
         });
@@ -155,23 +177,17 @@ describe('test /users routes', () => {
         .post('/api/users')
         .send(userJSON)
         .end((err, res) => {
+          userId = res.body.user._id;
+          userToken = res.body.token;
           expect(err).to.equal(null);
           expect(res).to.have.status(200);
           expect(res).to.be.json;
-          userId = res.body._id;
-          done();
-        });
-    });
-
-    before((done) => {
-      request('localhost:' + config.PORT)
-        .post('/login')
-        .send(userJSON)
-        .end((err, res) => {
-          expect(err).to.equal(null);
-          expect(res).to.have.status(200);
-          expect(res).to.be.json;
-          console.log(res.body);
+          expect(res.body).to.have.property('token');
+          expect(res.body.user).to.have.property('username');
+          expect(res.body.user).to.have.property('password');
+          expect(res.body.token).to.not.equal(null);
+          expect(res.body.user.username).to.equal('treehuggers');
+          expect(res.body.user.password).to.not.equal(null);
           done();
         });
     });
@@ -179,6 +195,7 @@ describe('test /users routes', () => {
     it('should respond to DELETE /users/:user', (done) => {
       request('localhost:' + config.PORT)
         .delete('/api/users/' + userId)
+        .set('token', userToken)
         .end((err, res) => {
           expect(err).to.equal(null);
           expect(res).to.have.status(200);

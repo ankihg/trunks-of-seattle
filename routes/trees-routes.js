@@ -2,6 +2,7 @@
 
 module.exports = (router, models) => {
   let Tree = models.Tree;
+  let jwtAuth = require(__dirname + '/../lib/jwtAuth.js');
 
   router.route('/trees')
     .get((req, res) => {
@@ -12,35 +13,35 @@ module.exports = (router, models) => {
         res.json(trees);
       });
     })
-    .post((req, res) => {
+    .post(jwtAuth, (req, res) => {
       let newTree = new Tree(req.body);
       newTree.save((err, tree)=>{
         if(err){
           return res.json({msg: err});
         }
-        res.json('New tree data has been saved! ' + tree);
+        res.json(tree);
       });
     });
 
   router.route('/trees/:tree')
     .get((req, res) => {
-      Tree.findOne({_id: req.params.id}, (err, tree)=>{
+      Tree.findOne({_id: req.params.tree}, (err, tree)=>{
         if(err){
           return res.json({msg: err});
         }
         res.json(tree);
       });
     })
-    .put((req, res) => {
-      Tree.findOneAndUpdate({_id: req.params.id}, {$set: req.body }, {new: true}, (err, data)=>{
+    .put(jwtAuth, (req, res) => {
+      Tree.findOneAndUpdate({_id: req.params.tree}, {$set: req.body }, {new: true}, (err, data)=>{
         if(err){
           return res.json({msg: err});
         }
-        res.json('Data updated successfully : ' + data);
+        res.json(data);
       });
     })
-    .delete((req, res) => {
-      Tree.findOneAndRemove({_id: req.params.id}, (err, data)=>{
+    .delete(jwtAuth, (req, res) => {
+      Tree.findOneAndRemove({_id: req.params.tree}, (err, data)=>{
         if(err){
           return res.json({msg: err});
         }
@@ -50,28 +51,22 @@ module.exports = (router, models) => {
 
   router.route('/trees/species/:species')
     .get((req, res) => {
-      Tree.find({species: req.params.id}, (err, tree)=>{
+      Tree.find({species: req.params.species}, (err, tree)=>{
         if(err){
           return res.json({msg: err});
         }
         res.json(tree);
       });
-    })
-    .put((req, res) => {
-      // let id = req.
-    })
-    .delete((req, res) => {
-
     });
 
   router.route('/trees/species/:species/neighborhoods/:neighborhood')
     .get((req, res) => {
 
     })
-    .put((req, res) => {
+    .put(jwtAuth, (req, res) => {
 
     })
-    .delete((req, res) => {
+    .delete(jwtAuth, (req, res) => {
 
     });
 };

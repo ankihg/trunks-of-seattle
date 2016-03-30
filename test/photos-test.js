@@ -1,0 +1,131 @@
+'use strict';
+//test with mocha -t 100000
+const config = require(__dirname + '/../config/env.js');
+
+const chai = require('chai');
+const chaiHttp = require('chai-http');
+require(__dirname + '/../server.js');
+
+chai.use(chaiHttp);
+const request = chai.request;
+const expect = chai.expect;
+
+const models = require(__dirname + '/../models');
+const Species = models.Species;
+const Tree = models.Tree;
+const Photo = models.Photo;
+
+let userId;
+let userToken;
+
+let userJSON = {
+  username: 'treehuggers',
+  password: 'treelovers'
+};
+
+describe('crud testing for resource photos', () => {
+
+  let tree;
+  let path = __dirname + '/../storage/plz.jpg';
+  let photo;
+
+  before((done) => {
+    request('localhost:' + config.PORT)
+      .post('/signup')
+      .send(userJSON)
+      .end((err, res) => {
+        userId = res.body.user._id;
+        userToken = res.body.token;
+        expect(err).to.equal(null);
+        expect(res).to.have.status(200);
+        expect(res).to.be.json;
+        expect(res.body).to.have.property('token');
+        expect(res.body.user).to.have.property('username');
+        expect(res.body.user).to.have.property('password');
+        expect(res.body.token).to.not.equal(null);
+        expect(res.body.user.username).to.equal('treehuggers');
+        expect(res.body.user.password).to.not.equal(null);
+        done();
+      });
+  });
+
+  before((done) => {
+
+    let newSpecies = new Species({genus:'plzus', species:'responda', commonName:'respond plz'});
+    newSpecies.save((err, species) => {
+      expect(err).eql(null);
+
+      let newTree = new Tree({cityID:'TRE-123', species:species._id, lat:55, lng:55, plotType:'GRASS'});
+      newTree.save((err, tr) => {
+        expect(err).eql(null);
+        Tree.populate(tr, 'species', (err, tr) => {
+          expect(err).eql(null);
+
+          tree = tr;
+          done();
+        });
+      });
+    });
+  });
+
+  it('post a photo', (done) => {
+    request('localhost:'+config.PORT)
+    .post('/photos')
+    .set('token', userToken)
+    .send({filepath:path, tree:tree})
+    .end((err, res) => {
+      expect(err).eql(null);
+      expect(res.body.msg).eql('photo upload successful');
+      done();
+    });
+  });
+
+  it('get all photos', (done) =>{
+    request('localhost:'+config.PORT)
+    .get('/photos')
+    .end((err, res) => {
+      expect(err).eql(null);
+      expect(res.body.photos.length).eql(1);
+      photo = res.body.photos[0];
+      done();
+    });
+  });
+
+  it('get all photos of tree', (done) => {
+    request('localhost:'+config.PORT)
+    .get('/photos/tree/'+tree._id)
+    .end((err, res) => {
+      expect(err).eql(null);
+      expect(res.body.photos.length).eql(1);
+      done();
+    });
+  });
+
+  after((done) => {
+    Photo.remove({}, (err) => {
+      if (err) return console.log(err);
+      console.log('photos rmeoved');
+      done();
+    });
+  });
+
+  after((done) => {
+    request('localhost:' + config.PORT)
+      .delete('/api/users/' + userId)
+      .set('token', userToken)
+      .end((err, res) => {
+        expect(err).to.equal(null);
+        expect(res).to.have.status(200);
+        expect(res).to.be.json;
+        expect(res.body).to.have.property('message');
+        expect(res.body.user).to.have.property('_id');
+        expect(res.body.user).to.have.property('username');
+        expect(res.body.user).to.have.property('password');
+        expect(res.body.message).to.equal('Deleted User');
+        expect(res.body._id).to.not.equal(null);
+        expect(res.body.user.username).to.equal('treehuggers');
+        expect(res.body.user.password).to.not.equal(null);
+        done();
+      });
+  });
+});
