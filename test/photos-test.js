@@ -95,7 +95,7 @@ describe('crud testing for resource photos', () => {
 
   it('get all photos of tree', (done) => {
     request('localhost:'+config.PORT)
-    .get('/api/photos/tree/'+tree._id)
+    .get('/api/photos/trees/'+tree._id)
     .end((err, res) => {
       expect(err).eql(null);
       expect(res.body.photos.length).eql(1);
@@ -124,6 +124,16 @@ describe('crud testing for resource photos', () => {
       done();
     });
   });
+
+  it('get all photos by user', (done) => {
+    request('localhost:'+config.PORT)
+    .get('/api/photos/users/'+userId)
+    .end((err, res) => {
+      expect(err).eql(null);
+      expect(res.body).property('data');
+      done();
+    });
+  })
 
   after((done) => {
     request('localhost:' + config.PORT)

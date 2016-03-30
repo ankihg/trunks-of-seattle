@@ -37,14 +37,11 @@ module.exports = (mongoose, models) => {
   };
 
   PhotoSchema.methods.postToFlickr = function(filepath, tree, user, next) {
-    console.log('heres the user');
-    console.log(user);
 
     let photo = this;
     let desc = `${tree.species.genus} ${tree.species.species} at latitute:${tree.lat} and longitude:${tree.lng}`;
     if (tree.address) desc = desc.concat(` near ${tree.address}`);
     if (user.username) desc = desc.concat(` by user ${user.username}`);
-    console.log(desc);
 
     Flickr.authenticate(FlickrOptions, function(error, flickr) {
       var uploadOptions = {

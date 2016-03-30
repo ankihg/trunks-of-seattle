@@ -36,11 +36,19 @@ module.exports = (router, publicRouter, models) => {
     });
   });
 
-  router.route('/photos/tree/:tree')
+  router.route('/photos/trees/:tree')
   .get((req, res) => {
     Photo.find({tree:req.params.tree}, (err, photos) => {
       if (err) return res.status(500).json({msg:'error reading photos', err:err});
       return res.status(200).json({photos});
+    });
+  });
+
+  router.route('/photos/users/:user')
+  .get((req, res) => {
+    Photo.find({user:req.params.user}, (err, photos) => {
+      if (err) return res.status(500).json({msg:'error reading photos', err:err});
+      return res.status(200).json({msg: 'got photos of user', data: photos});
     });
   });
 
