@@ -72,13 +72,24 @@ describe('crud testing for resource photos', () => {
     });
   });
 
-  it('get flickr photo by id', (done) => {
+  it('get flickr photo object by id', (done) => {
     request('localhost:'+config.PORT)
     .get('/photos/'+photo._id)
     .end((err, res) => {
       expect(err).eql(null);
-      expect(res.body).property('id');
-      expect(res.body).property('farm');
+      expect(res.body.data).property('id');
+      expect(res.body.data).property('farm');
+      done();
+    });
+  });
+
+  it('get flickr photo by id', (done) => {
+    request('localhost:'+config.PORT)
+    .get('/photos/'+photo._id+'/view')
+    .end((err, res) => {
+      expect(err).eql(null);
+      expect(res.text).not.eql(null);
+      expect(res.text).not.eql(undefined);
       done();
     });
   });
