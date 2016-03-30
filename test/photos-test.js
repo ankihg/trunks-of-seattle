@@ -70,10 +70,11 @@ describe('crud testing for resource photos', () => {
 
   it('post a photo', (done) => {
     request('localhost:'+config.PORT)
-    .post('/photos')
+    .post('/api/photos')
     .set('token', userToken)
     .send({filepath:path, tree:tree})
     .end((err, res) => {
+      // console.log(err);
       expect(err).eql(null);
       expect(res.body.msg).eql('photo upload successful');
       done();
@@ -82,7 +83,7 @@ describe('crud testing for resource photos', () => {
 
   it('get all photos', (done) =>{
     request('localhost:'+config.PORT)
-    .get('/photos')
+    .get('/api/photos')
     .end((err, res) => {
       expect(err).eql(null);
       expect(res.body.photos.length).eql(1);
@@ -93,7 +94,7 @@ describe('crud testing for resource photos', () => {
 
   it('get all photos of tree', (done) => {
     request('localhost:'+config.PORT)
-    .get('/photos/tree/'+tree._id)
+    .get('/api/photos/tree/'+tree._id)
     .end((err, res) => {
       expect(err).eql(null);
       expect(res.body.photos.length).eql(1);
