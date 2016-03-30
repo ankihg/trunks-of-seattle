@@ -23,7 +23,7 @@ describe('crud testing for resource photos', () => {
 
   before((done) => {
 
-    let newSpecies = new Species({genus:'plzus', species:'responda', commonName:'respond plz'});
+    let newSpecies = new Species({genus:'hjalpus', species:'miga', commonName:'hjalp mig'});
     newSpecies.save((err, species) => {
       expect(err).eql(null);
 
@@ -72,12 +72,14 @@ describe('crud testing for resource photos', () => {
     });
   });
 
-  it('get photo by id', (done) => {
+  it('get flickr photo by id', (done) => {
     request('localhost:'+config.PORT)
     .get('/photos/'+photo._id)
     .end((err, res) => {
-      console.log(err);
-      console.log(res);
+      expect(err).eql(null);
+      expect(res.body).property('id');
+      expect(res.body).property('farm');
+      done();
     });
   });
 

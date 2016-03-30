@@ -17,17 +17,22 @@ module.exports = (mongoose, models) => {
     tree: {type: mongoose.Schema.Types.ObjectId, ref: 'Tree'}
   });
 
-  PhotoSchema.methods.getFromFlickr = function() {
+  PhotoSchema.methods.getFromFlickr = function(next) {
 
     let photo = this;
 
     Flickr.authenticate(FlickrOptions, function(error, flickr) {
-      console.log(photo.tree);
-      flickr.photos.search({tags:[photo.tree._id]}, (err, result) => {
-        if (err) return console.log(err);
-        console.log(result);
-      })
-    })
+      if (error) return next(error);
+      flickr.photos.search({
+        user_id: flickr.options.user_id,
+        page: 1,
+        per_page: 1,
+        id:photo.flickrID
+      }, (err, result) => {
+        if (err) return next(err);
+        return next(null, result.photos.photo[0]);
+      });
+    });
   };
 
   PhotoSchema.methods.postToFlickr = function(filepath, tree, next) {
