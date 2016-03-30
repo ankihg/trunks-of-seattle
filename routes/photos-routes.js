@@ -24,13 +24,39 @@ module.exports = (router, models) => {
     });
   });
 
+  router.route('/photos/:photo')
+  .get((req, res) => {
+    Photo.findById(req.params.photo, (err, photo) => {
+      if (err) return res.status(500).json({msg:'error finding photo', err:err});
+      if (!photo) return res.status(400).json({msg:'photo does not exist', err:err});
+      photo.getFromFlickr((err, flickrPhoto) => {
+        if (err) return res.status(500).json({msg:'error getting photo from flickr', err:err});
+        return res.status(200).json({msg:'get flickr photo object', data:flickrPhoto});
+      });
+    });
+  });
+
+  router.route('/photos/:photo/view')
+  .get((req, res) => {
+    //http://stackoverflow.com/questions/10353097/flickr-api-include-photo-in-website
+    //http://farm{farm-id}.staticflickr.com/{server-id}/{id}_{secret}.jpg
+    Photo.findById(req.params.photo, (err, photo) => {
+      if (err) return res.status(500).json({msg:'error finding photo', err:err});
+      if (!photo) return res.status(400).json({msg:'photo does not exist', err:err});
+      photo.getFromFlickr((err, flickrPhoto) => {
+        if (err) return res.status(500).json({msg:'error getting photo from flickr', err:err});
+
+        var photoURL = `http://farm${flickrPhoto.farm}.staticflickr.com/${flickrPhoto.server}/${flickrPhoto.id}_${flickrPhoto.secret}.jpg`;
+        var img = `<img src=${photoURL}></img>`
+        return res.status(200).send(img);
+      });
+    });
+  });
+
   router.route('/photos/tree/:tree')
   .get((req, res) => {
-    console.log('get photos of tree');
     Photo.find({tree:req.params.tree}, (err, photos) => {
       if (err) return res.status(500).json({msg:'error reading photos', err:err});
-      console.log('made it past err');
-      console.log(photos);
       return res.status(200).json({photos});
     });
   });
