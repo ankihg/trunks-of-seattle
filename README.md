@@ -15,9 +15,13 @@ To run mocha tests set timeout flag to 100000
 mocha -t 100000
 ```
 
-## authorization
-
 ## requests
+Requests can be made to the server to access and modify 
+
+
+### authorization
+
+
 
 
 ## responses
