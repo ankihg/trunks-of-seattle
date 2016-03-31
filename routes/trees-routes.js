@@ -8,18 +8,18 @@ module.exports = (router, models) => {
     .get((req, res) => {
       Tree.find({}, (err, trees)=>{
         if(err){
-          return res.json({msg: err});
+          return res.json({message: err});
         }
-        res.json(trees);
+        res.status(200).json({message: 'All Trees Desplayed',{data: trees}});
       });
     })
     .post(jwtAuth, (req, res) => {
       let newTree = new Tree(req.body);
       newTree.save((err, tree)=>{
         if(err){
-          return res.json({msg: err});
+          return res.json({message: err});
         }
-        res.json({message: 'Created Tree', data: tree});
+        res.status(200).json({message: 'Created Tree Data', data: tree});
       });
     });
 
@@ -37,25 +37,25 @@ module.exports = (router, models) => {
     .get((req, res) => {
       Tree.findOne({_id: req.params.tree}, (err, tree)=>{
         if(err){
-          return res.json({msg: err});
+          return res.json({message: err});
         }
-        res.json(tree);
+        res.status(200).json({message: 'Selected A Tree',{data: tree}});
       });
     })
     .put(jwtAuth, (req, res) => {
       Tree.findOneAndUpdate({_id: req.params.tree}, {$set: req.body }, {new: true}, (err, data)=>{
         if(err){
-          return res.json({msg: err});
+          return res.json({message: err});
         }
-        res.json(data);
+        res.status(200).json({message: 'Modified Tree Data',{data: data}});
       });
     })
     .delete(jwtAuth, (req, res) => {
       Tree.findOneAndRemove({_id: req.params.tree}, (err, data)=>{
         if(err){
-          return res.json({msg: err});
+          return res.json({message: err});
         }
-        res.json({message: 'Deleted Tree', data: data});
+        res.status(200).json({message: 'Deleted Tree', data: data});
       });
     });
 
@@ -74,9 +74,9 @@ module.exports = (router, models) => {
     .get((req, res) => {
       Tree.find({species: req.params.species}, (err, tree)=>{
         if(err){
-          return res.json({msg: err});
+          return res.json({message: err});
         }
-        res.json(tree);
+        res.status(200).json({message: 'Selected Species', data: tree});
       });
     });
 
@@ -90,6 +90,7 @@ module.exports = (router, models) => {
       });
     });
 
+
   router.route('/trees/species/:species/neighborhoods/:neighborhood')
     .get((req, res) => {
 
@@ -100,4 +101,5 @@ module.exports = (router, models) => {
     .delete(jwtAuth, (req, res) => {
 
     });
+
 };
