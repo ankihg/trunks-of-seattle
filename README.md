@@ -85,6 +85,20 @@ auth | method | path | body | action
 
 
 ### photos
+Photos are stored publicly on Trunks of Seattle's [Flickr account](https://www.flickr.com/photos/141429933@N06/). Photo CRUDs use [node flickrapi](https://www.npmjs.com/package/flickrapi).
+```
+photo:{
+  flickrID: String
+  tree: Tree_id
+  user: User_id
+}
+```
+
+auth | method | path | body | action
+--- | --- | --- | --- | ---
+ | GET | /api/photos | | get all photos
+ | GET | /api/photos/:photo | | get photo by id
+ * | POST | /api/photos | 
 
 ### users
 
