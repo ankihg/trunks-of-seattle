@@ -98,7 +98,9 @@ auth | method | path | body | action
 --- | --- | --- | --- | ---
  | GET | /api/photos | | get all photos
  | GET | /api/photos/:photo | | get photo by id
- * | POST | /api/photos | 
+ | GET | /api/photos/trees/:tree | | get all photos of tree by id
+ | GET | /api/photos/users/:user | | get all photos by user by id
+ * | POST | /api/photos | {filepath, tree} | post photo of tree
 
 ### users
 
