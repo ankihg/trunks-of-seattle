@@ -42,6 +42,9 @@ module.exports = (mongoose, models) => {
     let desc = `${tree.species.genus} ${tree.species.species} at latitute:${tree.lat} and longitude:${tree.lng}`;
     if (tree.address) desc = desc.concat(` near ${tree.address}`);
     if (user.username) desc = desc.concat(` by user ${user.username}`);
+    console.log(filepath);
+    console.log(tree);
+    console.log(user);
 
     Flickr.authenticate(FlickrOptions, function(error, flickr) {
       var uploadOptions = {
@@ -49,7 +52,7 @@ module.exports = (mongoose, models) => {
           title: tree.species.commonName,
           photo: filepath,
           description: desc,
-          tags: [tree.cityID, tree.species.commonName, `${tree.species.genus} ${tree.species.species}`, `user ${user.username}`, 'trees', 'Seattle', 'Trunks of Seattle']
+          tags: [tree.cityID, tree.species.commonName, tree.species.genus, `${tree.species.genus} ${tree.species.species}`, `user ${user.username}`, 'trees', 'Seattle', 'Trunks of Seattle']
         }]
       };
 
