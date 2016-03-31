@@ -26,8 +26,8 @@ POST /signup {username:'tad', password:'plz'}
 A successful user sign up or log in will respond with JSON of the form below
 ```
 {
-  message: 'User Created', // a brief descript of the transaction
-  token: 'xxxxxxxxxx', // the user token, include in authorization header of all authorized requests
+  message: 'User Created' // a brief descript of the transaction
+  token: 'xxxxxxxxxx' // the user token, include in authorization header of all authorized requests
   data: {createdUser} // the user that was created
 }
 ```
@@ -38,9 +38,9 @@ A successful user sign up or log in will respond with JSON of the form below
 Requests to the API return JSON with the following fields
 ```
 {
-  message: 'got species by id 555', // a brief description of the transaction
-  data: '{genus:"cedrus", species:"deodara", commonName:"deodar cedar"}', // the requested data
-  err: 'null',  // error if encountered
+  message: 'got species by id 555' // a brief description of the transaction
+  data: '{genus:"cedrus", species:"deodara", commonName:"deodar cedar"}' // the requested data
+  err: 'null'  // error if encountered
   token: 'xxxxxxxxxx' // user token if applicable
 }
 ```
