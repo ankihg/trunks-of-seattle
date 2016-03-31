@@ -127,11 +127,7 @@ describe('test /login route', () => {
         expect(res).to.have.status(200);
         expect(res).to.be.json;
         expect(res.body).to.have.property('message');
-        expect(res.body.data).to.have.property('username');
-        expect(res.body.data).to.have.property('password');
         expect(res.body.message).to.equal('User Already Exists');
-        expect(res.body.data.username).to.equal('treehuggers');
-        expect(res.body.data.password).to.not.equal(null);
         done();
       });
   });
