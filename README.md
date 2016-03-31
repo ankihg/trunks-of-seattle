@@ -20,7 +20,7 @@ POST /signup {username:'tad', password:'plz'}
 ```
 To get a token as a registered user, make a POST reqeust to /login
 ```
-POST /signup {username:'tad', password:'plz'}
+POST /login {username:'tad', password:'plz'}
 ```
 
 A successful user sign up or log in will respond with JSON of the form below
@@ -79,6 +79,9 @@ auth | method | path | body | action
 --- | --- | --- | --- | ---
  | GET | /api/trees | | get all trees
  | GET | /api/trees/:tree | | get trees by id
+ | GET | /api/trees/count | | get total count for all trees
+ | GET | /api/trees/species/count | | get total count for each species
+ | GET | /api/trees/species/:species/count | | get total count for species by id
 * | POST | /api/trees  | {newTree}  | create a tree
 * | PUT | /api/trees/:tree | {updatedTree} | update a tree by id
 * | DELETE | /api/trees/:tree | | remove a tree by id
