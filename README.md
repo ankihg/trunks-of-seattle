@@ -19,9 +19,24 @@ mocha -t 100000
 Requests can be made to the server to read and modify tree data in the MongoDB.
 
 
-
 ### authorization
+Access to authorized routes requires a token of a registered user. To become a registered user and get a token, make a POST request to /signup.
+```
+POST /signup {username:'tad', password:'plz'}
+```
+To get a token as a registered user, make a POST reqeust to /login
+```
+POST /signup {username:'tad', password:'plz'}
+```
 
+A successful user sign up or log in will respond with json of the form below
+```
+{
+  message: 'User Created', // a brief descript of the transaction
+  token: 'xxxxxxxxxx', // the user token, include in authorization header of all authorized requests
+  data: {createdUser} // the user that was created
+}
+```
 
 
 
