@@ -103,6 +103,20 @@ auth | method | path | body | action
  * | POST | /api/photos | {filepath, tree} | post photo of tree
 
 ### users
+```
+user:{
+  username: String
+  password: String
+}
+```
+
+auth | method | path | body | action
+--- | --- | --- | --- | ---
+* | GET | /api/users | | get all users
+* | GET | /api/users/:user | | get user by id
+  | POST | /api/users  | {newUser}  | create a user
+* | PUT | /api/users/:user | {updatedUser} | update a user by id
+* | DELETE | /api/users/:user | | remove a user by id
 
 ## testing
 To run mocha tests set timeout flag to 100000
