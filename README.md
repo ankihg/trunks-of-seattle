@@ -38,6 +38,7 @@ Requests to the API return JSON with the following fields
 
 
 ## routes
+
 ### species
 auth | method | path | body | action
 --- | --- | --- | --- | ---
@@ -47,9 +48,15 @@ auth | method | path | body | action
 * | PUT | /api/species/:species | {updatedSpecies} | update a species by id
 * | DELETE | /api/species/:species | | remove a species by id
 
-*signals authorized route
-
 ### trees
+auth | method | path | body | action
+--- | --- | --- | --- | ---
+ | GET | /api/trees | | get all trees
+ | GET | /api/trees/:tree | | get trees by id
+* | POST | /api/trees  | {newTree}  | create a tree
+* | PUT | /api/trees/:tree | {updatedTree} | update a tree by id
+* | DELETE | /api/trees/:tree | | remove a tree by id
+
 
 ### photos
 
