@@ -9,12 +9,6 @@ Tree data is from the City of Seattle's [Open Data Portal](https://data.seattle.
 * Species and addresses are from [SDOT Trees in the Public Right-of-Way](https://data.seattle.gov/Transportation/SDOT-Trees-in-the-Public-Right-of-Way/tiq5-syif)
 * Latitudes and longitudes are from [Trees](https://data.seattle.gov/dataset/Trees/xg4t-j322)
 
-## testing
-To run mocha tests set timeout flag to 100000
-```
-mocha -t 100000
-```
-
 ## requests
 Requests can be made to the server to read and modify tree data in the MongoDB.
 
@@ -52,7 +46,7 @@ Requests to the API return JSON with the following fields
 ```
 
 
-## routes
+## resources
 
 ### species
 auth | method | path | body | action
@@ -76,3 +70,9 @@ auth | method | path | body | action
 ### photos
 
 ### users
+
+## testing
+To run mocha tests set timeout flag to 100000
+```
+mocha -t 100000
+```
