@@ -23,7 +23,7 @@ To get a token as a registered user, make a POST reqeust to /login
 POST /signup {username:'tad', password:'plz'}
 ```
 
-A successful user sign up or log in will respond with json of the form below
+A successful user sign up or log in will respond with JSON of the form below
 ```
 {
   message: 'User Created', // a brief descript of the transaction
