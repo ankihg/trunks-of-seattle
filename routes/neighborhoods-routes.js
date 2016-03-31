@@ -14,7 +14,14 @@ module.exports = (router, models) => {
 
   router.route('/neighborhoods/:neighborhood')
     .get((req, res) => {
-
+      // let neighborhood = req.params.id;
+      // console.log('hitting neighborhood route');
+      // neighborhoodsbox.find({neighborhood: neighborhood},(err, neighborhood)=>{
+      //   if(err){
+      //     return res.json({message: err});
+      //   }
+      //   console.log(neighborhood);
+      // });
     })
     .put(jwtAuth, (req, res) => {
 

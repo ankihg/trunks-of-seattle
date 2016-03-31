@@ -122,8 +122,8 @@ describe('Integration testing for /trees routes', ()=>{
     .get('/api/trees')
     .end((err, res)=>{
       expect(err).to.be.null;
-      expect(res.body).to.be.an('array');
-      expect(res.body[0]).to.have.property('species');
+      expect(res.body.data).to.be.an('array');
+      expect(res.body.data[0]).to.have.property('cityID');
       done();
     });
   });
@@ -147,8 +147,8 @@ describe('Integration testing for /trees routes', ()=>{
     .end((err, res)=>{
       expect(err).to.be.null;
       expect(res.body).to.have.an('object');
-      expect(res.body).to.have.property('_id');
-      expect(res.body._id).to.have.string(treeId);
+      expect(res.body.data).to.have.property('_id');
+      expect(res.body.data._id).to.have.string(treeId);
       done();
     });
   });
@@ -160,8 +160,8 @@ describe('Integration testing for /trees routes', ()=>{
     .end((err, res)=>{
       expect(err).to.be.null;
       expect(res.body).to.have.an('object');
-      expect(res.body).to.have.property('cityID');
-      expect(res.body.cityID).to.equal('newcityID');
+      expect(res.body.data).to.have.property('cityID');
+      expect(res.body.data.cityID).to.equal('newcityID');
       done();
     });
   });
@@ -170,8 +170,8 @@ describe('Integration testing for /trees routes', ()=>{
     .get('/api/trees/species/' + speciesTestId)
     .end((err, res)=>{
       expect(err).to.be.null;
-      expect(res.body).to.have.an('array');
-      expect(res.body[0].species).to.have.string(speciesTestId);
+      expect(res.body.data).to.have.an('array');
+      expect(res.body.data[0].species).to.have.string(speciesTestId);
       done();
     });
   });
@@ -597,4 +597,3 @@ describe('testing counts for trees', () => {
       });
   });
 });
-

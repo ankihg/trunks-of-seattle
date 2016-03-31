@@ -17,6 +17,7 @@ require(__dirname + '/routes/trees-routes')(apiRouter, models);
 require(__dirname + '/routes/users-routes')(apiRouter, models);
 require(__dirname + '/routes/photos-routes')(apiRouter, publicRouter, models);
 
+
 app.use(bodyParser.json());
 app.use('/', publicRouter);
 app.use('/api', apiRouter);
