@@ -10,7 +10,7 @@ module.exports = (router, models) => {
         if(err){
           return res.json({message: err});
         }
-        res.status(200).json({message: 'All Trees Desplayed',{data: trees}});
+        res.status(200).json({message: 'All Trees Desplayed', data: trees});
       });
     })
     .post(jwtAuth, (req, res) => {
@@ -39,7 +39,7 @@ module.exports = (router, models) => {
         if(err){
           return res.json({message: err});
         }
-        res.status(200).json({message: 'Selected A Tree',{data: tree}});
+        res.status(200).json({message: 'Selected A Tree', data: tree});
       });
     })
     .put(jwtAuth, (req, res) => {
@@ -47,7 +47,7 @@ module.exports = (router, models) => {
         if(err){
           return res.json({message: err});
         }
-        res.status(200).json({message: 'Modified Tree Data',{data: data}});
+        res.status(200).json({message: 'Modified Tree Data', data: data });
       });
     })
     .delete(jwtAuth, (req, res) => {
