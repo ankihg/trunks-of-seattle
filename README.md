@@ -49,6 +49,13 @@ Requests to the API return JSON with the following fields
 ## resources
 
 ### species
+```
+species: {
+ genus: String
+ species: String
+ commonName: String
+}
+```
 auth | method | path | body | action
 --- | --- | --- | --- | ---
  | GET | /api/species | | get all species
@@ -58,6 +65,16 @@ auth | method | path | body | action
 * | DELETE | /api/species/:species | | remove a species by id
 
 ### trees
+```
+tree: {
+ species: Species_id
+ cityID: String
+ commonName: String
+ lat: Number
+ lng: Number
+ plotType: String
+}
+```
 auth | method | path | body | action
 --- | --- | --- | --- | ---
  | GET | /api/trees | | get all trees
