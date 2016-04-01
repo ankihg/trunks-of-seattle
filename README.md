@@ -76,6 +76,10 @@ tree: {
  plotType: String
 }
 ```
+```
+After converting Schema:
+
+```
 auth | method | path | body | action
 --- | --- | --- | --- | ---
  | GET | /api/trees | | get all trees
@@ -121,6 +125,12 @@ auth | method | path | body | action
   | POST | /api/users  | {newUser}  | create a user
 * | PUT | /api/users/:user | {updatedUser} | update a user by id
 * | DELETE | /api/users/:user | | remove a user by id
+
+### Wikipedia
+
+auth | method | path | body | action
+--- | --- | --- | --- | ---
+* | GET | api/species/:species | | get a species by id and pull Wiki article about the species.
 
 ## testing
 To run mocha tests set timeout flag to 100000
