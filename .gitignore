@@ -4,3 +4,4 @@ config
 data
 geojson
 geojsonNew
+.DS_Store
