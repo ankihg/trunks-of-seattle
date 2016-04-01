@@ -78,7 +78,16 @@ tree: {
 ```
 ```
 After converting Schema:
-
+GeoTree: {
+  loc: {
+    coordinates: [],
+    type: {type: String 'Polygon'/'MultiPolygon'}
+    },
+    cityID: String,
+    plotType: String,
+    species: Species_id,
+  });
+}:
 ```
 auth | method | path | body | action
 --- | --- | --- | --- | ---
