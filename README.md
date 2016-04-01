@@ -1,3 +1,4 @@
+![alt tag](./img/trunk-seattle-logo.png)
 # trunks-of-seattle
 A server that CRUDs Seattle street tree data stored in a MongoDB
 
