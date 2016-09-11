@@ -25,12 +25,14 @@ module.exports = (router, models) => {
 
   router.route('/trees/id/:cityID')
     .get((req, res) => {
-      Tree.findOne({cityID: req.params.cityID}, (err, tree)=>{
-        if(err){
-          return res.json({message: err});
-        }
-        res.status(200).json({message: 'Selected tree by cityID '+req.params.cityID, data: tree});
-      });
+      Tree.findOne({cityID: req.params.cityID})
+        .populate('species')
+        .exec((err, tree) => {
+          if (err){
+            return res.json({message: err});
+          }
+          res.status(200).json({message: 'Selected tree by cityID '+req.params.cityID, data: tree});
+        });
     });
 
   router.route('/trees/count')
